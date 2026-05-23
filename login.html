@@ -1,240 +1,225 @@
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>REDIBAI | Portal de Acceso</title>
+<title>REDIBAI | Acceso</title>
 <meta name="description" content="Inicia sesión en el campus digital de REDIBAI Orizaba." />
-<meta name="theme-color" content="#111415" />
-<meta name="color-scheme" content="dark" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="REDIBAI" />
-<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#fafaf7" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-<script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        colors: {
-          "secondary-fixed": "#ffe088", "outline": "#8f9097", "surface-container": "#1d2021",
-          "outline-variant": "#44474d", "background": "#111415",
-          "surface-container-lowest": "#0c0f10", "secondary-fixed-dim": "#e9c349",
-          "surface-container-low": "#191c1d", "on-surface": "#e1e3e4",
-          "primary-container": "#0a192f", "on-surface-variant": "#c5c6cd",
-          "surface-container-high": "#282a2b", "secondary-container": "#af8d11",
-          "secondary": "#e9c349", "on-secondary": "#3c2f00", "surface": "#111415"
-        },
-        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
-        spacing: {
-          base: "8px", gutter: "24px", "container-padding-mobile": "20px",
-          "section-gap": "80px", "container-padding-desktop": "40px", "card-gap": "24px"
-        },
-        fontFamily: {
-          "label-caps": ["Inter"], "headline-md": ["Libre Caslon Text"],
-          "headline-sm": ["Libre Caslon Text"], "body-md": ["Inter"], "body-sm": ["Inter"]
-        },
-        fontSize: {
-          "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
-          "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
-          "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
-          "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
-          "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
-        }
-      }
-    }
-  };
-</script>
 <style>
-  :root { --gold-glow: 0 4px 20px rgba(233, 195, 73, 0.15); }
-  body { font-family: 'Inter', sans-serif; background-color: #111415; min-height: max(884px, 100dvh); }
-  .font-headline { font-family: 'Libre Caslon Text', serif; }
-  .glass-panel {
-    background: rgba(29, 32, 33, 0.6);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .gold-button-glow:active { box-shadow: var(--gold-glow); transform: scale(0.98); }
-  .input-glow:focus-within { border-color: #e9c349; box-shadow: 0 0 0 1px #e9c349; }
-  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  #pwa-install-btn {
-    position: fixed; bottom: 24px; right: 24px; z-index: 60;
-    background: rgba(29,32,33,.85); backdrop-filter: blur(20px);
-    border: 1px solid rgba(233,195,73,.35); color: #ffe088;
-    border-radius: 9999px; padding: 10px 18px;
-    font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;
-    letter-spacing: .12em; text-transform: uppercase;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  }
-  #pwa-install-btn[hidden] { display: none; }
-  .demo-banner {
-    background: rgba(233,195,73,.08);
-    border: 1px solid rgba(233,195,73,.25);
-    color: #ffe088;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 12px;
-    line-height: 1.4;
-    margin-bottom: 24px;
-  }
-  .demo-pill { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:#ffe088; padding:4px 10px; border-radius:9999px; font-size:11px; cursor:pointer; }
-  .demo-pill:hover { background:rgba(233,195,73,.18); border-color:#e9c349; }
+  :root { --ink:#161a1d; --ink-2:#4b5057; --ink-3:#7a7e85; --cream:#fafaf7; --surf:#fff; --gold:#a07a14; --gold-light:#c9a635; --hairline:rgba(20,25,30,.08); --serif:'Cormorant Garamond',Georgia,serif; --sans:'Inter',system-ui,sans-serif; }
+  html[data-theme="dark"] { --ink:#ecedee; --ink-2:#b6b7bf; --ink-3:#8b8c93; --cream:#0e1112; --surf:#15181a; --gold:#e9c349; --gold-light:#ffe088; --hairline:rgba(255,255,255,.08); }
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; height:100%; background:var(--cream); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+
+  .split { display:grid; grid-template-columns: 1fr 1fr; min-height:100vh; }
+  @media (max-width: 900px) { .split { grid-template-columns:1fr; } .pane-photo { display:none; } }
+
+  .pane-photo { position:relative; overflow:hidden; }
+  .pane-photo img { width:100%; height:100%; object-fit:cover; transform:scale(1.05); animation:slowzoom 30s ease-out forwards; }
+  @keyframes slowzoom { to { transform:scale(1); } }
+  .pane-photo::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.15) 50%, rgba(0,0,0,.7) 100%); }
+  .pane-photo .quote { position:absolute; left:48px; right:48px; bottom:56px; z-index:2; color:#fff; font-family:var(--serif); font-size:24px; font-weight:400; font-style:italic; line-height:1.4; max-width:440px; }
+  .pane-photo .quote::before { content:'"'; font-size:80px; line-height:.2; color:var(--gold-light); display:block; margin-bottom:18px; font-family:var(--serif); }
+  .pane-photo .quote-author { font-style:normal; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.7); margin-top:24px; }
+  .pane-photo .top-brand { position:absolute; top:32px; left:48px; z-index:2; color:#fff; font-family:var(--serif); display:flex; align-items:center; gap:10px; }
+  .pane-photo .top-brand .m { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); display:grid; place-items:center; color:var(--gold-light); font-size:18px; backdrop-filter:blur(10px); }
+  .pane-photo .top-brand .t { font-size:13px; letter-spacing:.24em; text-transform:uppercase; }
+
+  .pane-form { display:flex; flex-direction:column; justify-content:center; padding:48px 56px; max-width:520px; margin:0 auto; width:100%; }
+  @media (max-width:720px) { .pane-form { padding:32px 24px; } }
+  .toolbar { position:absolute; top:18px; right:18px; display:flex; gap:6px; z-index:10; }
+  .toolbar button { background:transparent; border:1px solid var(--hairline); color:var(--ink-2); border-radius:9999px; padding:0 10px; min-width:38px; height:32px; font-size:11px; font-weight:600; letter-spacing:.12em; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-family:var(--sans); transition:.2s; }
+  .toolbar button:hover { border-color:var(--gold); color:var(--gold); }
+
+  .form-head { margin-bottom:32px; }
+  .form-head .eyebrow { font-size:10.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px; }
+  .form-head h1 { font-family:var(--serif); font-weight:500; font-size:42px; margin:0 0 8px; letter-spacing:-0.015em; }
+  .form-head p { font-size:14px; color:var(--ink-2); margin:0; }
+
+  .banner { background:rgba(160,122,20,.08); border:1px solid rgba(160,122,20,.22); border-radius:10px; padding:12px 14px; font-size:12px; line-height:1.4; color:var(--ink); margin-bottom:24px; }
+  html[data-theme="dark"] .banner { background:rgba(233,195,73,.08); border-color:rgba(233,195,73,.25); color:var(--ink); }
+  .banner b { color:var(--gold); }
+  .pills { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+  .pill { background:transparent; border:1px solid var(--hairline); color:var(--ink-2); padding:5px 12px; border-radius:9999px; font-size:11px; cursor:pointer; font-family:var(--sans); transition:.15s; }
+  .pill:hover { border-color:var(--gold); color:var(--gold); }
+
+  form .row { margin-bottom:16px; }
+  form label { display:block; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); font-weight:600; margin-bottom:6px; }
+  .field-input { display:flex; align-items:center; gap:10px; background:var(--surf); border:1px solid var(--hairline); border-radius:10px; padding:0 14px; height:46px; transition:.15s; }
+  .field-input:focus-within { border-color:var(--gold); box-shadow:0 0 0 3px rgba(160,122,20,.12); }
+  .field-input input { flex:1; border:0; outline:0; background:transparent; color:var(--ink); font-size:14px; font-family:var(--sans); }
+  .field-input input::placeholder { color:var(--ink-3); }
+  .field-input .material-symbols-outlined { color:var(--ink-3); font-size:19px; }
+  .toggle-pw { background:transparent; border:0; color:var(--ink-3); cursor:pointer; }
+  .toggle-pw:hover { color:var(--gold); }
+
+  .row-between { display:flex; justify-content:space-between; align-items:center; }
+  .row-between a { font-size:12.5px; color:var(--gold); }
+  .row-between a:hover { text-decoration:underline; }
+
+  .btn-primary { width:100%; height:48px; border-radius:10px; background:var(--ink); color:var(--cream); border:0; font-size:12px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; cursor:pointer; transition:.2s; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--sans); }
+  .btn-primary:hover { background:var(--gold); color:#fff; transform:translateY(-1px); box-shadow:0 8px 24px rgba(160,122,20,.25); }
+  html[data-theme="dark"] .btn-primary { background:var(--gold); color:#000; }
+  html[data-theme="dark"] .btn-primary:hover { background:var(--gold-light); }
+
+  .divider { display:flex; align-items:center; gap:12px; margin:28px 0 20px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3); }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--hairline); }
+
+  .socials { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .social { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:11px 14px; border:1px solid var(--hairline); border-radius:10px; font-size:12px; color:var(--ink); cursor:pointer; background:var(--surf); transition:.15s; font-family:var(--sans); }
+  .social:hover { border-color:var(--gold); color:var(--gold); }
+
+  .signup { margin-top:30px; font-size:13px; color:var(--ink-2); text-align:center; }
+  .signup a { color:var(--gold); font-weight:600; }
+  .signup a:hover { text-decoration:underline; }
+
+  .foot { margin-top:28px; display:flex; justify-content:center; gap:24px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3); }
 </style>
 </head>
-<body class="text-on-surface selection:bg-secondary-fixed/30 flex flex-col items-center justify-center overflow-x-hidden relative">
-<div class="fixed inset-0 pointer-events-none z-0">
-  <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary-container/5 rounded-full blur-[120px]"></div>
-  <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-primary-container/10 rounded-full blur-[150px]"></div>
+<body>
+
+<div class="toolbar">
+  <button id="rb-lang">ES</button>
+  <button id="rb-theme"><span class="material-symbols-outlined" style="font-size:17px">light_mode</span></button>
 </div>
 
-<main class="w-full max-w-[480px] px-container-padding-mobile md:px-0 relative z-10 py-12">
-  <header class="flex flex-col items-center mb-12">
-    <a href="/" class="w-20 h-20 mb-6 flex items-center justify-center">
-      <span class="material-symbols-outlined text-[64px] text-secondary" style="font-variation-settings: 'FILL' 1;">school</span>
-    </a>
-    <h1 class="font-headline-sm text-headline-sm text-secondary uppercase tracking-[0.2em] mb-2">REDIBAI</h1>
-    <p class="font-label-caps text-label-caps text-on-surface-variant/60">CAMPUS DIGITAL EXCLUSIVO</p>
-  </header>
+<div class="split">
+  <aside class="pane-photo">
+    <a href="/" class="top-brand"><span class="m">R</span><span class="t">Redibai · Orizaba</span></a>
+    <img id="loginPhoto" src="" alt="" />
+    <div class="quote">
+      <span data-es="La educación es el arma más poderosa que puedes usar para cambiar el mundo." data-en="Education is the most powerful weapon which you can use to change the world.">La educación es el arma más poderosa que puedes usar para cambiar el mundo.</span>
+      <div class="quote-author">— Nelson Mandela</div>
+    </div>
+  </aside>
 
-  <section class="glass-panel rounded-xl p-8 shadow-2xl transition-all duration-500 hover:border-outline-variant/30">
-    <div class="mb-6">
-      <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Bienvenido</h2>
-      <p class="font-body-md text-body-md text-on-surface-variant">Inicia sesión en tu cuenta institucional.</p>
+  <section class="pane-form">
+    <div class="form-head">
+      <div class="eyebrow" data-es="Campus digital · Acceso institucional" data-en="Digital campus · Institutional access">Campus digital · Acceso institucional</div>
+      <h1 data-es="Bienvenido de vuelta." data-en="Welcome back.">Bienvenido de vuelta.</h1>
+      <p data-es="Ingresa con tu correo institucional para continuar." data-en="Sign in with your institutional email to continue.">Ingresa con tu correo institucional para continuar.</p>
     </div>
 
-    <div class="demo-banner">
-      <strong>Demo navegable:</strong> elige un perfil abajo o usa cualquier correo + contraseña.
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-        <button type="button" class="demo-pill" data-as="admin">Director académico</button>
-        <button type="button" class="demo-pill" data-as="docente">Profesor</button>
-        <button type="button" class="demo-pill" data-as="alumno">Alumno</button>
+    <div class="banner">
+      <b data-es="Demo navegable:" data-en="Navigable demo:">Demo navegable:</b>
+      <span data-es=" elige un perfil o usa cualquier correo + contraseña." data-en=" pick a profile or use any email + password."> elige un perfil o usa cualquier correo + contraseña.</span>
+      <div class="pills">
+        <button type="button" class="pill" data-as="admin" data-es="Director académico" data-en="Academic Director">Director académico</button>
+        <button type="button" class="pill" data-as="docente" data-es="Profesor" data-en="Professor">Profesor</button>
+        <button type="button" class="pill" data-as="alumno" data-es="Alumno" data-en="Student">Alumno</button>
       </div>
     </div>
 
-    <form id="login-form" class="space-y-6" novalidate>
-      <div class="space-y-2">
-        <label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="email">CORREO ELECTRÓNICO</label>
-        <div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
-          <span class="material-symbols-outlined text-[20px] text-outline mr-3">mail</span>
-          <input required class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="email" name="email" placeholder="nombre@redibai.edu.mx" type="email" autocomplete="email" />
+    <form id="login-form" novalidate>
+      <div class="row">
+        <label for="email" data-es="Correo electrónico" data-en="Email address">Correo electrónico</label>
+        <div class="field-input">
+          <span class="material-symbols-outlined">mail</span>
+          <input required id="email" type="email" placeholder="nombre@redibai.edu.mx" autocomplete="email" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-between" style="margin-bottom:6px">
+          <label for="password" style="margin:0" data-es="Contraseña" data-en="Password">Contraseña</label>
+          <a href="#" data-es="¿Olvidaste la contraseña?" data-en="Forgot password?">¿Olvidaste la contraseña?</a>
+        </div>
+        <div class="field-input">
+          <span class="material-symbols-outlined">lock</span>
+          <input required id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+          <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Show password"><span class="material-symbols-outlined">visibility</span></button>
         </div>
       </div>
 
-      <div class="space-y-2">
-        <div class="flex justify-between items-center ml-1">
-          <label class="font-label-caps text-label-caps text-on-surface-variant" for="password">CONTRASEÑA</label>
-          <a class="font-body-sm text-body-sm text-secondary hover:text-secondary-fixed transition-colors" href="#">¿Olvidaste la contraseña?</a>
-        </div>
-        <div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
-          <span class="material-symbols-outlined text-[20px] text-outline mr-3">lock</span>
-          <input required class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="password" name="password" placeholder="••••••••" type="password" autocomplete="current-password" />
-          <button class="text-outline hover:text-on-surface" type="button" id="toggle-pw" aria-label="Mostrar contraseña">
-            <span class="material-symbols-outlined text-[20px]">visibility</span>
-          </button>
-        </div>
-      </div>
-
-      <button class="gold-button-glow w-full bg-secondary text-on-secondary font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-all hover:bg-secondary-fixed duration-300" type="submit">
-        <span class="font-label-caps text-label-caps tracking-widest">ENTRAR</span>
-        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </button>
+      <button type="submit" class="btn-primary"><span data-es="Entrar" data-en="Sign in">Entrar</span> <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></button>
     </form>
 
-    <div class="relative my-8 flex items-center">
-      <div class="flex-grow border-t border-outline-variant/20"></div>
-      <span class="px-4 font-label-caps text-[10px] text-outline uppercase tracking-widest">o continúa con</span>
-      <div class="flex-grow border-t border-outline-variant/20"></div>
+    <div class="divider" data-es="O continúa con" data-en="Or continue with">O continúa con</div>
+    <div class="socials">
+      <button type="button" class="social"><span class="material-symbols-outlined" style="font-size:17px;color:var(--gold)">g_translate</span> Google</button>
+      <button type="button" class="social"><span class="material-symbols-outlined" style="font-size:17px;color:var(--gold)" >apple</span> Apple</button>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
-      <button type="button" class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors">
-        <span class="material-symbols-outlined text-[20px] mr-3">g_translate</span>
-        <span class="font-body-sm text-body-sm">Google</span>
-      </button>
-      <button type="button" class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors">
-        <span class="material-symbols-outlined text-[20px] mr-3" style="font-variation-settings: 'FILL' 1;">apple</span>
-        <span class="font-body-sm text-body-sm">Apple</span>
-      </button>
+    <p class="signup">
+      <span data-es="¿Aún no tienes cuenta?" data-en="Don't have an account yet?">¿Aún no tienes cuenta?</span>
+      <a href="#" data-es="Crea una cuenta institucional" data-en="Create an institutional account">Crea una cuenta institucional</a>
+    </p>
+
+    <div class="foot">
+      <a href="#" data-es="Términos" data-en="Terms">Términos</a>
+      <a href="#" data-es="Privacidad" data-en="Privacy">Privacidad</a>
+      <a href="#" data-es="Soporte" data-en="Support">Soporte</a>
     </div>
   </section>
+</div>
 
-  <footer class="mt-10 text-center">
-    <p class="font-body-sm text-body-sm text-on-surface-variant">
-      ¿Aún no tienes cuenta?
-      <a class="text-secondary font-semibold hover:underline decoration-secondary/30 underline-offset-4 ml-1" href="#">Crea una cuenta institucional</a>
-    </p>
-    <div class="mt-8 flex justify-center space-x-6">
-      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">TÉRMINOS</a>
-      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">PRIVACIDAD</a>
-      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">SOPORTE</a>
-    </div>
-    <p class="mt-6 font-label-caps text-[10px] text-outline-variant/70 tracking-widest">
-      <span id="pwa-status" data-state="online"></span>
-    </p>
-  </footer>
-</main>
-
-<button id="pwa-install-btn" hidden type="button" aria-label="Instalar la aplicación REDIBAI">
-  <span class="material-symbols-outlined" style="font-size:18px;">download</span>
-  Instalar app
-</button>
-
+<script src="/photos.js"></script>
 <script>
-  const ROLE_PROFILES = {
+(function () {
+  document.getElementById('loginPhoto').src = PHOTOS.login;
+
+  const PROFILES = {
     admin:   { role:'admin',   user:{ id:'u-admin', name:'Mtra. Sofía Hernández Ruiz',  email:'admin@redibai.edu.mx',   role:'Director Académico', locationId:'loc-ori' }, dest:'/admin.html' },
     docente: { role:'docente', user:{ id:'t01',     name:'Dr. Luis García Mendoza',     email:'luis.garcia@redibai.edu.mx', role:'Profesor titular',   locationId:'loc-ori' }, dest:'/admin.html' },
     alumno:  { role:'alumno',  user:{ id:'u001',    name:'Ana Martínez López',          email:'ana.martinez@redibai.edu.mx', role:'Alumna · Grupo 6',  locationId:'loc-ori' }, dest:'/dashboard.html' }
   };
-
   function signIn(role) {
-    const profile = ROLE_PROFILES[role];
-    try {
-      localStorage.setItem('redibai:session', JSON.stringify({ role: profile.role, user: profile.user }));
-      localStorage.setItem('redibai:user', profile.user.email);
-    } catch (_) {}
-    location.href = profile.dest;
+    const p = PROFILES[role];
+    try { localStorage.setItem('redibai:session', JSON.stringify({ role:p.role, user:p.user })); localStorage.setItem('redibai:user', p.user.email); } catch(_){}
+    location.href = p.dest;
   }
+  document.querySelectorAll('.pill').forEach(btn => btn.addEventListener('click', () => signIn(btn.dataset.as)));
 
-  document.querySelectorAll('.demo-pill').forEach(btn => {
-    btn.addEventListener('click', () => signIn(btn.dataset.as));
-  });
-
-  const form = document.getElementById('login-form');
-  form.addEventListener('submit', (e) => {
+  document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
     const pw = document.getElementById('password').value;
     if (!email || !pw) return;
-    // Heuristic: if email contains "admin", use admin role; "prof"/"docente" -> docente; else alumno.
-    const role = /admin/i.test(email) ? 'admin'
-               : /(prof|docente|maestr)/i.test(email) ? 'docente'
-               : 'alumno';
-    const profile = JSON.parse(JSON.stringify(ROLE_PROFILES[role]));
-    profile.user.email = email;
-    profile.user.name = email.split('@')[0].split('.').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-    try {
-      localStorage.setItem('redibai:session', JSON.stringify({ role: profile.role, user: profile.user }));
-      localStorage.setItem('redibai:user', email);
-    } catch (_) {}
-    location.href = profile.dest;
+    const role = /admin/i.test(email) ? 'admin' : /(prof|docente|maestr)/i.test(email) ? 'docente' : 'alumno';
+    const p = JSON.parse(JSON.stringify(PROFILES[role]));
+    p.user.email = email;
+    p.user.name = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase()+s.slice(1)).join(' ');
+    try { localStorage.setItem('redibai:session', JSON.stringify({ role:p.role, user:p.user })); localStorage.setItem('redibai:user', email); } catch(_){}
+    location.href = p.dest;
   });
 
-  const toggle = document.getElementById('toggle-pw');
-  const pwInput = document.getElementById('password');
-  toggle.addEventListener('click', () => {
-    const isPw = pwInput.type === 'password';
-    pwInput.type = isPw ? 'text' : 'password';
-    toggle.querySelector('span').textContent = isPw ? 'visibility_off' : 'visibility';
+  const pw = document.getElementById('password');
+  document.getElementById('toggle-pw').addEventListener('click', (e) => {
+    const t = pw.type === 'password';
+    pw.type = t ? 'text' : 'password';
+    e.currentTarget.querySelector('.material-symbols-outlined').textContent = t ? 'visibility_off' : 'visibility';
   });
+
+  function getLang() { try { return localStorage.getItem('redibai:lang') || 'es'; } catch(_) { return 'es'; } }
+  function applyLang(l) {
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-es]').forEach(el => { const v = el.dataset[l]; if (v) el.textContent = v; });
+    document.getElementById('rb-lang').textContent = l.toUpperCase();
+  }
+  applyLang(getLang());
+  document.getElementById('rb-lang').addEventListener('click', () => {
+    const next = getLang() === 'es' ? 'en' : 'es';
+    try { localStorage.setItem('redibai:lang', next); } catch(_){}
+    applyLang(next);
+  });
+
+  function getTheme() { try { return localStorage.getItem('redibai:theme') || 'light'; } catch(_) { return 'light'; } }
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.querySelector('#rb-theme .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
+    document.querySelector('meta[name="theme-color"]').content = t==='dark' ? '#0e1112' : '#fafaf7';
+    try { localStorage.setItem('redibai:theme', t); } catch(_){}
+  }
+  setTheme(getTheme());
+  document.getElementById('rb-theme').addEventListener('click', () => setTheme(getTheme()==='dark'?'light':'dark'));
+})();
 </script>
-<script src="/standalone-toggle.js" defer></script>
 <script src="/pwa.js" defer></script>
 </body>
 </html>

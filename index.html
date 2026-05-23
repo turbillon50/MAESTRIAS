@@ -1,167 +1,284 @@
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>REDIBAI Orizaba — Excelencia Educativa</title>
+<title>REDIBAI Orizaba — Excelencia educativa</title>
 <meta name="description" content="REDIBAI Orizaba — Campus digital y ecosistema académico de excelencia." />
-<meta name="theme-color" content="#111415" />
-<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#fafaf7" />
 <meta name="application-name" content="REDIBAI" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="REDIBAI" />
-<meta name="mobile-web-app-capable" content="yes" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png" />
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-<script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        colors: {
-          "secondary-fixed": "#ffe088", "inverse-primary": "#515f78", "on-tertiary-fixed": "#111c2c",
-          "surface-container-highest": "#323536", "outline": "#8f9097", "tertiary-fixed-dim": "#bcc7dc",
-          "surface-container": "#1d2021", "on-secondary-fixed": "#241a00", "surface-dim": "#111415",
-          "error-container": "#93000a", "outline-variant": "#44474d", "primary-fixed-dim": "#b9c7e4",
-          "background": "#111415", "surface-container-lowest": "#0c0f10", "on-tertiary-container": "#778296",
-          "tertiary-container": "#0e1929", "on-secondary-container": "#342800", "secondary-fixed-dim": "#e9c349",
-          "surface-bright": "#373a3b", "on-error-container": "#ffdad6", "surface-container-low": "#191c1d",
-          "on-surface": "#e1e3e4", "on-tertiary": "#263141", "error": "#ffb4ab", "primary-container": "#0a192f",
-          "on-primary": "#233148", "on-surface-variant": "#c5c6cd", "inverse-surface": "#e1e3e4",
-          "tertiary": "#bcc7dc", "on-primary-fixed-variant": "#39475f", "tertiary-fixed": "#d7e3f9",
-          "on-primary-container": "#74829d", "surface-container-high": "#282a2b", "on-background": "#e1e3e4",
-          "primary": "#b9c7e4", "on-primary-fixed": "#0d1c32", "inverse-on-surface": "#2e3132",
-          "secondary-container": "#af8d11", "secondary": "#e9c349", "on-error": "#690005",
-          "on-tertiary-fixed-variant": "#3c4759", "on-secondary-fixed-variant": "#574500",
-          "surface-variant": "#323536", "on-secondary": "#3c2f00", "primary-fixed": "#d6e3ff",
-          "surface": "#111415", "surface-tint": "#b9c7e4"
-        },
-        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
-        spacing: {
-          base: "8px", gutter: "24px", "container-padding-mobile": "20px",
-          "section-gap": "80px", "container-padding-desktop": "40px", "card-gap": "24px"
-        },
-        fontFamily: {
-          "label-caps": ["Inter"], "headline-md": ["Libre Caslon Text"], "headline-sm": ["Libre Caslon Text"],
-          "display-lg": ["Libre Caslon Text"], "display-lg-mobile": ["Libre Caslon Text"],
-          "body-md": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"]
-        },
-        fontSize: {
-          "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
-          "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
-          "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
-          "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
-          "display-lg-mobile": ["36px", { lineHeight: "1.2", fontWeight: "700" }],
-          "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
-          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
-          "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
-        }
-      }
-    }
-  };
-</script>
 <style>
-  @keyframes shimmer {
-    0% { opacity: 0.4; filter: brightness(1); }
-    50% { opacity: 1; filter: brightness(1.3); }
-    100% { opacity: 0.4; filter: brightness(1); }
+  :root {
+    --ink: #161a1d;
+    --ink-2: #4b5057;
+    --gold: #a07a14;
+    --gold-light: #c9a635;
+    --cream: #fafaf7;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
   }
-  .animate-shimmer { animation: shimmer 4s ease-in-out infinite; }
-  .gold-glow {
-    background: radial-gradient(circle, rgba(233, 195, 73, 0.15) 0%, rgba(17, 20, 21, 0) 70%);
+  html[data-theme="dark"] {
+    --ink: #f4f1e8;
+    --ink-2: #c2c2c2;
+    --cream: #0c0d0f;
+    --gold: #e9c349;
   }
-  .glass-panel {
-    background: rgba(29, 32, 33, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; height:100%; background:var(--cream); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; overflow:hidden; }
+
+  .stage { position:relative; width:100vw; height:100vh; overflow:hidden; }
+
+  /* Hero photo with ken-burns */
+  .hero-photo {
+    position:absolute; inset:0; z-index:0;
+    background-position:center; background-size:cover;
+    transform:scale(1.15);
+    animation: kenburns 24s ease-out forwards;
+    will-change:transform;
   }
-  .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  @keyframes kenburns {
+    0%   { transform:scale(1.15) translate(0,0); }
+    100% { transform:scale(1.0)  translate(-2%,-1%); }
   }
-  body { min-height: max(884px, 100dvh); }
-  /* PWA install pill */
-  #pwa-install-btn {
-    position: fixed; bottom: 24px; right: 24px; z-index: 60;
-    background: rgba(29,32,33,.85); backdrop-filter: blur(20px);
-    border: 1px solid rgba(233,195,73,.35); color: #ffe088;
-    border-radius: 9999px; padding: 10px 18px;
-    font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;
-    letter-spacing: .12em; text-transform: uppercase;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  .hero-veil {
+    position:absolute; inset:0; z-index:1;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.15) 35%, rgba(0,0,0,.35) 65%, rgba(0,0,0,.7) 100%);
   }
-  #pwa-install-btn[hidden] { display: none; }
-  #pwa-install-btn:hover { border-color: #e9c349; color: #e9c349; }
+  .hero-grain {
+    position:absolute; inset:0; z-index:2; pointer-events:none; opacity:.18; mix-blend-mode:overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.5'/></svg>");
+  }
+
+  /* Cinematic letterbox bars */
+  .letterbox { position:absolute; left:0; right:0; height:60px; background:#000; z-index:5; transition:height 1.4s cubic-bezier(.7,0,.3,1); }
+  .letterbox.top { top:0; }
+  .letterbox.bot { bottom:0; }
+  .stage.is-ready .letterbox { height:18px; }
+
+  /* Content */
+  .content {
+    position:absolute; inset:0; z-index:6;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:40px 24px; text-align:center; color:#fff;
+  }
+
+  .monogram {
+    width:74px; height:74px; border-radius:50%;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.22);
+    display:grid; place-items:center; backdrop-filter:blur(14px);
+    color:var(--gold-light); font-family:var(--serif); font-weight:500; font-size:38px;
+    margin-bottom:28px; opacity:0; transform:translateY(10px);
+    animation: rise .9s ease-out .35s forwards;
+    box-shadow:0 8px 40px rgba(0,0,0,.35);
+  }
+
+  .eyebrow {
+    font-size:11px; letter-spacing:.42em; text-transform:uppercase; font-weight:500;
+    color:rgba(255,255,255,.78);
+    opacity:0; transform:translateY(8px);
+    animation: rise .8s ease-out .55s forwards;
+    margin-bottom:16px;
+  }
+
+  h1.brand-title {
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(46px, 8vw, 96px); line-height:1.0; letter-spacing:-0.02em;
+    margin:0; color:#fff;
+    text-shadow: 0 2px 24px rgba(0,0,0,.4);
+  }
+  h1 .word { display:inline-block; opacity:0; transform:translateY(14px); animation: rise 1s cubic-bezier(.2,.7,.3,1) forwards; }
+  h1 .word:nth-child(1) { animation-delay:.7s; }
+  h1 .word:nth-child(2) { animation-delay:.95s; margin-left:.25em; }
+  h1 .italic { font-style:italic; color:var(--gold-light); }
+
+  .rule {
+    width:60px; height:1px; background:rgba(255,255,255,.55);
+    margin:22px auto;
+    transform:scaleX(0); transform-origin:center;
+    animation: scale-in .8s ease-out 1.5s forwards;
+  }
+
+  .tagline {
+    font-family:var(--serif); font-size:clamp(18px, 2.2vw, 24px); font-weight:400; font-style:italic;
+    color:rgba(255,255,255,.86); max-width:560px;
+    opacity:0; transform:translateY(8px);
+    animation: rise .9s ease-out 1.65s forwards;
+  }
+
+  .ctas { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:38px;
+    opacity:0; transform:translateY(10px); animation: rise .8s ease-out 2s forwards; }
+  .cta {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px; border-radius:9999px; font-family:var(--sans);
+    font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    transition:.2s; cursor:pointer; border:0;
+  }
+  .cta-gold { background:#fff; color:var(--ink); }
+  .cta-gold:hover { background:var(--gold-light); color:#000; transform:translateY(-1px); box-shadow:0 12px 28px rgba(0,0,0,.3); }
+  .cta-ghost { background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.4); backdrop-filter:blur(12px); }
+  .cta-ghost:hover { background:rgba(255,255,255,.16); border-color:#fff; }
+
+  .quick-links {
+    display:flex; gap:24px; margin-top:30px; font-size:10.5px; letter-spacing:.24em; text-transform:uppercase;
+    opacity:0; animation: rise .9s ease-out 2.35s forwards;
+  }
+  .quick-links a { color:rgba(255,255,255,.62); transition:.15s; text-decoration:none; }
+  .quick-links a:hover { color:#fff; }
+  .quick-links .sep { color:rgba(255,255,255,.3); }
+
+  .stats-strip {
+    position:absolute; bottom:48px; left:0; right:0; z-index:6;
+    display:flex; justify-content:center; gap:48px;
+    color:rgba(255,255,255,.7); font-family:var(--sans); font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    opacity:0; animation: rise 1s ease-out 2.6s forwards;
+  }
+  .stats-strip .stat { text-align:center; }
+  .stats-strip .stat b { display:block; font-family:var(--serif); font-size:32px; font-weight:500; color:#fff; margin-bottom:2px; }
+  @media (max-width:720px) { .stats-strip { display:none; } }
+
+  @keyframes rise { to { opacity:1; transform:none; } }
+  @keyframes scale-in { to { transform:scaleX(1); } }
+
+  /* Top-right toolbar (theme/lang/install) */
+  .toolbar { position:fixed; top:18px; right:18px; z-index:50; display:flex; gap:6px; }
+  .toolbar button {
+    background:rgba(255,255,255,.12); backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.25); color:#fff;
+    border-radius:9999px; padding:0 12px; min-width:42px; height:36px;
+    font-family:var(--sans); font-size:11px; font-weight:600; letter-spacing:.14em;
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:.2s;
+  }
+  .toolbar button:hover { background:rgba(255,255,255,.22); border-color:#fff; }
+  .toolbar .install { color:var(--gold-light); }
+  .toolbar .install[hidden] { display:none; }
+
+  .brand-mark-top {
+    position:fixed; top:24px; left:28px; z-index:50;
+    display:flex; align-items:center; gap:10px; color:#fff;
+    font-family:var(--serif); font-weight:500;
+    opacity:0; animation: rise .8s ease-out .15s forwards;
+  }
+  .brand-mark-top .m { width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); display:grid; place-items:center; font-size:18px; color:var(--gold-light); backdrop-filter:blur(10px); }
+  .brand-mark-top .t { font-size:14px; letter-spacing:.22em; text-transform:uppercase; }
 </style>
 </head>
-<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center overflow-hidden">
-<div class="fixed inset-0 z-0">
-  <div class="absolute inset-0 flex items-center justify-center opacity-40">
-    <div class="w-[800px] h-[800px] gold-glow rounded-full"></div>
-  </div>
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface-container-lowest opacity-80"></div>
-</div>
+<body>
 
-<main class="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-container-padding-mobile text-center">
-  <div class="mb-12 relative group">
-    <div class="absolute -inset-10 bg-secondary/10 blur-3xl rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
-    <div class="h-40 md:h-56 w-40 md:w-56 mx-auto animate-shimmer filter drop-shadow-[0_0_15px_rgba(233,195,73,0.3)] flex items-center justify-center">
-      <span class="material-symbols-outlined text-secondary" style="font-size: 9rem; font-variation-settings: 'FILL' 1;">school</span>
-    </div>
-  </div>
+<div class="stage" id="stage">
+  <div class="hero-photo" id="heroPhoto"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-grain"></div>
+  <div class="letterbox top"></div>
+  <div class="letterbox bot"></div>
 
-  <div class="space-y-6">
-    <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-secondary tracking-tighter">REDIBAI ORIZABA</h1>
-    <div class="w-16 h-[1px] bg-secondary-fixed/30 mx-auto"></div>
-    <p class="font-headline-sm text-headline-sm text-on-surface-variant font-light italic max-w-lg mx-auto opacity-80">
-      Excelencia educativa conectada
+  <a href="/welcome.html" class="brand-mark-top">
+    <span class="m">R</span><span class="t">Redibai · Orizaba</span>
+  </a>
+
+  <div class="content">
+    <div class="monogram">R</div>
+    <div class="eyebrow" data-en="Orizaba · 2026" data-es="Orizaba · 2026">Orizaba · 2026</div>
+
+    <h1 class="brand-title">
+      <span class="word">REDIBAI</span><span class="word italic" data-en="Academy" data-es="Academia">Academia</span>
+    </h1>
+
+    <div class="rule"></div>
+
+    <p class="tagline" data-en="A connected academic ecosystem — masters, doctorates and seven campuses, in real time."
+       data-es="Un ecosistema académico conectado — maestrías, doctorados y siete sedes, en tiempo real.">
+      Un ecosistema académico conectado — maestrías, doctorados y siete sedes, en tiempo real.
     </p>
-  </div>
 
-  <div class="mt-section-gap flex flex-col gap-4 items-center">
-    <a href="/admin.html" class="group relative px-10 py-4 bg-secondary text-on-secondary rounded-full font-label-caps text-label-caps transition-all duration-500 hover:scale-105 active:scale-95 overflow-hidden">
-      <span class="relative z-10">INGRESAR AL CAMPUS</span>
-      <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-    </a>
-    <div class="flex items-center gap-6 mt-8">
-      <a class="font-label-caps text-[10px] text-outline hover:text-secondary transition-colors tracking-[0.2em] uppercase" href="/welcome.html">Bienvenida</a>
-      <span class="w-1 h-1 bg-outline/30 rounded-full"></span>
-      <a class="font-label-caps text-[10px] text-outline hover:text-secondary transition-colors tracking-[0.2em] uppercase" href="/login.html">Iniciar sesión</a>
-      <span class="w-1 h-1 bg-outline/30 rounded-full"></span>
-      <a class="font-label-caps text-[10px] text-outline hover:text-secondary transition-colors tracking-[0.2em] uppercase" href="/dashboard.html">Vista alumno</a>
+    <div class="ctas">
+      <a href="/admin.html" class="cta cta-gold" data-en="Enter campus" data-es="Ingresar al campus">Ingresar al campus</a>
+      <a href="/welcome.html" class="cta cta-ghost" data-en="Discover" data-es="Conocer más">Conocer más</a>
     </div>
-    <p class="mt-6 font-label-caps text-[10px] text-outline/60 tracking-[0.2em] uppercase">400 alumnos · 5 maestrías · 3 doctorados · 7 sedes</p>
-    <span id="pwa-status" data-state="online" class="mt-2 font-label-caps text-[10px] text-outline/60 tracking-widest uppercase"></span>
-  </div>
-</main>
 
-<div class="fixed bottom-12 left-1/2 -translate-x-1/2 flex gap-3 opacity-20 pointer-events-none">
-  <div class="w-1 h-1 bg-secondary rounded-full animate-pulse"></div>
-  <div class="w-1 h-1 bg-secondary rounded-full animate-pulse [animation-delay:200ms]"></div>
-  <div class="w-1 h-1 bg-secondary rounded-full animate-pulse [animation-delay:400ms]"></div>
+    <div class="quick-links">
+      <a href="/login.html" data-en="Sign in" data-es="Iniciar sesión">Iniciar sesión</a>
+      <span class="sep">·</span>
+      <a href="/dashboard.html" data-en="Student view" data-es="Vista alumno">Vista alumno</a>
+      <span class="sep">·</span>
+      <a href="/locations.html" data-en="Campuses" data-es="Sedes">Sedes</a>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat"><b>400</b><span data-en="Active students" data-es="Alumnos activos">Alumnos activos</span></div>
+    <div class="stat"><b>8</b><span data-en="Cohorts" data-es="Cohortes">Cohortes</span></div>
+    <div class="stat"><b>7</b><span data-en="Campuses" data-es="Sedes">Sedes</span></div>
+    <div class="stat"><b>24/7</b><span data-en="Online" data-es="En línea">En línea</span></div>
+  </div>
 </div>
 
-<button id="pwa-install-btn" hidden type="button" aria-label="Instalar la aplicación REDIBAI">
-  <span class="material-symbols-outlined" style="font-size:18px;">download</span>
-  Instalar app
-</button>
+<div class="toolbar">
+  <button id="rb-lang" type="button">ES</button>
+  <button id="rb-theme" type="button">
+    <span class="material-symbols-outlined" style="font-size:18px">light_mode</span>
+  </button>
+  <button id="pwa-install-btn" class="install" hidden>
+    <span class="material-symbols-outlined" style="font-size:18px">download</span>
+  </button>
+</div>
 
+<script src="/photos.js"></script>
 <script>
-  document.addEventListener('mousemove', (e) => {
-    const logo = document.querySelector('main > div:first-child > div:last-child');
-    if (!logo) return;
-    const x = (window.innerWidth / 2 - e.pageX) / 50;
-    const y = (window.innerHeight / 2 - e.pageY) / 50;
-    logo.style.transform = `translate(${x}px, ${y}px)`;
+(function () {
+  // Background photo (random pick from a cinematic set)
+  const candidates = [PHOTOS.splash, PHOTOS.splash_b, PHOTOS.splash_c, PHOTOS.welcome, PHOTOS.auditorium];
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  const photo = document.getElementById('heroPhoto');
+  photo.style.backgroundImage = `url('${pick}')`;
+  // Preload to detect failure → fallback gradient
+  const img = new Image();
+  img.onload = () => { document.getElementById('stage').classList.add('is-ready'); };
+  img.onerror = () => {
+    photo.style.background = 'linear-gradient(135deg, #1a1d20 0%, #2a3344 40%, #4a3a14 100%)';
+    document.getElementById('stage').classList.add('is-ready');
+  };
+  img.src = pick;
+  setTimeout(() => document.getElementById('stage').classList.add('is-ready'), 350);
+
+  // i18n
+  function getLang() { try { return localStorage.getItem('redibai:lang') || 'es'; } catch(_) { return 'es'; } }
+  function applyLang(l) {
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-es]').forEach(el => {
+      const v = el.dataset[l];
+      if (v) el.textContent = v;
+    });
+    document.getElementById('rb-lang').textContent = l.toUpperCase();
+  }
+  applyLang(getLang());
+  document.getElementById('rb-lang').addEventListener('click', () => {
+    const next = getLang() === 'es' ? 'en' : 'es';
+    try { localStorage.setItem('redibai:lang', next); } catch(_){}
+    applyLang(next);
   });
+
+  // Theme
+  function getTheme() { try { return localStorage.getItem('redibai:theme') || 'light'; } catch(_) { return 'light'; } }
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.querySelector('#rb-theme .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
+    document.querySelector('meta[name="theme-color"]').content = t==='dark' ? '#0c0d0f' : '#fafaf7';
+    try { localStorage.setItem('redibai:theme', t); } catch(_){}
+  }
+  setTheme(getTheme());
+  document.getElementById('rb-theme').addEventListener('click', () => setTheme(getTheme()==='dark'?'light':'dark'));
+})();
 </script>
-<script src="/standalone-toggle.js" defer></script>
 <script src="/pwa.js" defer></script>
 </body>
 </html>

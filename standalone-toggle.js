@@ -14,7 +14,7 @@
   };
 
   function getTheme() {
-    try { return localStorage.getItem('redibai:theme') || 'dark'; } catch (_) { return 'dark'; }
+    try { return localStorage.getItem('redibai:theme') || 'light'; } catch (_) { return 'light'; }
   }
   function getLang() {
     try { return localStorage.getItem('redibai:lang') || 'es'; } catch (_) { return 'es'; }

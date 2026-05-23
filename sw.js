@@ -1,5 +1,5 @@
 /* REDIBAI PWA service worker */
-const VERSION = 'redibai-v3-premium';
+const VERSION = 'redibai-v4-cinematic';
 const PRECACHE = `precache-${VERSION}`;
 const RUNTIME = `runtime-${VERSION}`;
 
@@ -26,6 +26,7 @@ const APP_SHELL = [
   '/app.js',
   '/app.css',
   '/i18n.js',
+  '/photos.js',
   '/realtime.js',
   '/pwa.js',
   '/standalone-toggle.js',
