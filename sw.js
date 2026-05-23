@@ -1,5 +1,5 @@
 /* REDIBAI PWA service worker */
-const VERSION = 'redibai-v2-academy';
+const VERSION = 'redibai-v3-premium';
 const PRECACHE = `precache-${VERSION}`;
 const RUNTIME = `runtime-${VERSION}`;
 
@@ -25,8 +25,10 @@ const APP_SHELL = [
   '/data.js',
   '/app.js',
   '/app.css',
+  '/i18n.js',
   '/realtime.js',
   '/pwa.js',
+  '/standalone-toggle.js',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/apple-touch-icon.png',
