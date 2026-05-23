@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>REDIBAI | Portal de Acceso</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --gold-glow: 0 4px 20px rgba(233, 195, 73, 0.15);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111415; /* background from config */
+        }
+        .font-headline { font-family: 'Libre Caslon Text', serif; }
+        .glass-panel {
+            background: rgba(29, 32, 33, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gold-button-glow:active {
+            box-shadow: var(--gold-glow);
+            transform: scale(0.98);
+        }
+        .input-glow:focus-within {
+            border-color: #e9c349;
+            box-shadow: 0 0 0 1px #e9c349;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffe088",
+                        "inverse-primary": "#515f78",
+                        "on-tertiary-fixed": "#111c2c",
+                        "surface-container-highest": "#323536",
+                        "outline": "#8f9097",
+                        "tertiary-fixed-dim": "#bcc7dc",
+                        "surface-container": "#1d2021",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-dim": "#111415",
+                        "error-container": "#93000a",
+                        "outline-variant": "#44474d",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "background": "#111415",
+                        "surface-container-lowest": "#0c0f10",
+                        "on-tertiary-container": "#778296",
+                        "tertiary-container": "#0e1929",
+                        "on-secondary-container": "#342800",
+                        "secondary-fixed-dim": "#e9c349",
+                        "surface-bright": "#373a3b",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1d",
+                        "on-surface": "#e1e3e4",
+                        "on-tertiary": "#263141",
+                        "error": "#ffb4ab",
+                        "primary-container": "#0a192f",
+                        "on-primary": "#233148",
+                        "on-surface-variant": "#c5c6cd",
+                        "inverse-surface": "#e1e3e4",
+                        "tertiary": "#bcc7dc",
+                        "on-primary-fixed-variant": "#39475f",
+                        "tertiary-fixed": "#d7e3f9",
+                        "on-primary-container": "#74829d",
+                        "surface-container-high": "#282a2b",
+                        "on-background": "#e1e3e4",
+                        "primary": "#b9c7e4",
+                        "on-primary-fixed": "#0d1c32",
+                        "inverse-on-surface": "#2e3132",
+                        "secondary-container": "#af8d11",
+                        "secondary": "#e9c349",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed-variant": "#3c4759",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-variant": "#323536",
+                        "on-secondary": "#3c2f00",
+                        "primary-fixed": "#d6e3ff",
+                        "surface": "#111415",
+                        "surface-tint": "#b9c7e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "24px",
+                        "container-padding-mobile": "20px",
+                        "section-gap": "80px",
+                        "container-padding-desktop": "40px",
+                        "card-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Libre Caslon Text"],
+                        "headline-sm": ["Libre Caslon Text"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen text-on-surface selection:bg-secondary-fixed/30 flex flex-col items-center justify-center overflow-x-hidden relative">
+<!-- Subtle Background Atmosphere -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary-container/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-primary-container/10 rounded-full blur-[150px]"></div>
+</div>
+<!-- Main Content Container -->
+<main class="w-full max-w-[480px] px-container-padding-mobile md:px-0 relative z-10 py-12">
+<!-- Header / Logo -->
+<header class="flex flex-col items-center mb-12 animate-fade-in">
+<div class="w-20 h-20 mb-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-secondary" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-secondary uppercase tracking-[0.2em] mb-2">REDIBAI</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant/60">CAMPUS DIGITAL EXCLUSIVO</p>
+</header>
+<!-- Auth Card -->
+<section class="glass-panel rounded-xl p-8 shadow-2xl transition-all duration-500 hover:border-outline-variant/30">
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Bienvenido</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Inicia sesión en tu cuenta institucional.</p>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="email">CORREO ELECTRÓNICO</label>
+<div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
+<span class="material-symbols-outlined text-[20px] text-outline mr-3">mail</span>
+<input class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="email" placeholder="nombre@redibai.edu.mx" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center ml-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="password">CONTRASEÑA</label>
+<a class="font-body-sm text-body-sm text-secondary hover:text-secondary-fixed transition-colors" href="#">¿Olvidaste la contraseña?</a>
+</div>
+<div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
+<span class="material-symbols-outlined text-[20px] text-outline mr-3">lock</span>
+<input class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="password" placeholder="••••••••" type="password"/>
+<button class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Action -->
+<button class="gold-button-glow w-full bg-secondary text-on-secondary font-bold py-4 rounded-lg flex items-center justify-center space-x-2 transition-all hover:bg-secondary-fixed duration-300" type="submit">
+<span class="font-label-caps text-label-caps tracking-widest">ENTRAR</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative my-10 flex items-center">
+<div class="flex-grow border-t border-outline-variant/20"></div>
+<span class="px-4 font-label-caps text-[10px] text-outline uppercase tracking-widest">o continúa con</span>
+<div class="flex-grow border-t border-outline-variant/20"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors group">
+<img alt="Google" class="w-5 h-5 mr-3 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcyR6VhyU8ijblQO7Q-AGF4D5zHcpB8mDhagfLIMtJlGj5bjmheHrdotAXfzpQCvglH4LTMz3EAFEc5jFu4hq9vrRS2FQIyBghvnTVBW0tAOTB1m_dYMeZiB5l3033JkUVQBT0dMU3b96s22xGAZvp_RTIZyugnlln-WKW4xR-LdbrN0q0nhc8LENLo0A_6-7oZKmnMsJIjQjpOuZjrHi2W0r7WM8UbB6f6XzJcz03fv2nVDY6hzEIAxc7dBczcFHdy34fcKEfmHA"/>
+<span class="font-body-sm text-body-sm">Google</span>
+</button>
+<button class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-[20px] mr-3" style="font-variation-settings: 'FILL' 1;">ios</span>
+<span class="font-body-sm text-body-sm">Apple</span>
+</button>
+</div>
+</section>
+<!-- Footer Links -->
+<footer class="mt-10 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                ¿Aún no tienes cuenta? 
+                <a class="text-secondary font-semibold hover:underline decoration-secondary/30 underline-offset-4 ml-1" href="#">Crea una cuenta institucional</a>
+</p>
+<div class="mt-12 flex justify-center space-x-6">
+<a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">TÉRMINOS</a>
+<a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">PRIVACIDAD</a>
+<a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">SOPORTE</a>
+</div>
+</footer>
+</main>
+<!-- Atmospheric Floating Elements -->
+<div class="fixed bottom-10 left-10 opacity-20 hidden lg:block animate-pulse">
+<div class="flex items-center space-x-3 text-secondary">
+<span class="material-symbols-outlined text-[32px]">verified_user</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px]">CONEXIÓN</span>
+<span class="font-label-caps text-[12px] font-bold">SEGURA SSL 256-BIT</span>
+</div>
+</div>
+</div>
+<!-- Decorative Image Layer (Editorial Style) -->
+<div class="fixed right-[-15%] top-1/2 -translate-y-1/2 w-[40%] h-[618px] rounded-l-[100px] overflow-hidden opacity-30 pointer-events-none hidden xl:block shadow-2xl">
+<img class="w-full h-full object-cover grayscale brightness-50 contrast-125" data-alt="A highly sophisticated, cinematic view of a modern university corridor featuring dark oak wood paneling and minimalist recessed lighting. The atmosphere is quiet, intellectual, and prestigious, utilizing a dark mode color palette of midnight navy and deep charcoal. The scene is illuminated by soft, focused golden light highlights that emphasize the clean architectural lines and the high-end, exclusive nature of the REDIBAI campus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbezaew7uoQjAhwbHjVqa_sBv87tG6b-AeaYrgU3RkKGW2GXkQSJlNYDNpxLjBSFi8k3WGJeu8f0iOCXSh75mDUpuEF3xbggANoEMHC-1OfVF3tyV1s4HHhOoJ21eVgor02YU5Q_J1kyBmsqXmF8ClscJwT_OH7UM45hNnMSL5zP4oUrP0Cwn2ozNQBEa0jVC4T0M9fgANMRR8yM4f6HUoeBhqLqfv8raf476reL1Ft0PlTV-fy6OnWemjYiGIyqOX_3JVI9QUTDs"/>
+</div>
+<script>
+        // Simple micro-interaction for the card on mouse move
+        const card = document.querySelector('.glass-panel');
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 1024) return;
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Entrance animation
+        window.addEventListener('load', () => {
+            document.querySelector('main').classList.add('animate-in', 'fade-in', 'duration-1000');
+        });
+    </script>
+</body></html>

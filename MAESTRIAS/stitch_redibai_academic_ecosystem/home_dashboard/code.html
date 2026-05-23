@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>REDIBAI - Dashboard Académico</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffe088",
+                        "inverse-primary": "#515f78",
+                        "on-tertiary-fixed": "#111c2c",
+                        "surface-container-highest": "#323536",
+                        "outline": "#8f9097",
+                        "tertiary-fixed-dim": "#bcc7dc",
+                        "surface-container": "#1d2021",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-dim": "#111415",
+                        "error-container": "#93000a",
+                        "outline-variant": "#44474d",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "background": "#111415",
+                        "surface-container-lowest": "#0c0f10",
+                        "on-tertiary-container": "#778296",
+                        "tertiary-container": "#0e1929",
+                        "on-secondary-container": "#342800",
+                        "secondary-fixed-dim": "#e9c349",
+                        "surface-bright": "#373a3b",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1d",
+                        "on-surface": "#e1e3e4",
+                        "on-tertiary": "#263141",
+                        "error": "#ffb4ab",
+                        "primary-container": "#0a192f",
+                        "on-primary": "#233148",
+                        "on-surface-variant": "#c5c6cd",
+                        "inverse-surface": "#e1e3e4",
+                        "tertiary": "#bcc7dc",
+                        "on-primary-fixed-variant": "#39475f",
+                        "tertiary-fixed": "#d7e3f9",
+                        "on-primary-container": "#74829d",
+                        "surface-container-high": "#282a2b",
+                        "on-background": "#e1e3e4",
+                        "primary": "#b9c7e4",
+                        "on-primary-fixed": "#0d1c32",
+                        "inverse-on-surface": "#2e3132",
+                        "secondary-container": "#af8d11",
+                        "secondary": "#e9c349",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed-variant": "#3c4759",
+                        "on-secondary-fixed-variant": "#574500",
+                        "surface-variant": "#323536",
+                        "on-secondary": "#3c2f00",
+                        "primary-fixed": "#d6e3ff",
+                        "surface": "#111415",
+                        "surface-tint": "#b9c7e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "24px",
+                        "container-padding-mobile": "20px",
+                        "section-gap": "80px",
+                        "container-padding-desktop": "40px",
+                        "card-gap": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Libre Caslon Text"],
+                        "headline-sm": ["Libre Caslon Text"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "display-lg-mobile": ["Libre Caslon Text"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #111415;
+            color: #e1e3e4;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(29, 32, 33, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gold-glow {
+            filter: drop-shadow(0 4px 15px rgba(212, 175, 55, 0.1));
+        }
+        .progress-gradient {
+            background: linear-gradient(90deg, #e9c349 0%, #b9c7e4 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface/70 dark:bg-surface/70 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-container-padding-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 overflow-hidden border border-secondary/30">
+<img alt="Profile photo of Ana, student" class="w-full h-full object-cover" data-alt="A professional studio headshot of a young female student with a warm smile, wearing a subtle academic blazer. The lighting is soft and directional, typical of a high-end corporate portrait. The background is a clean, out-of-focus modern campus interior with warm wood tones and soft highlights, matching the premium REDIBAI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU6W7xmFoRZWK6JvrLAH7eLdNUx-6641oN4cXiw31ey1JfnygVjlFCaqbaFwATwPV5qv2IkXxAAfhoqNWujKliMCjoPZftR-X8fw2g37fGHZKg4-qXOWCEtup_lA9ystL_7Zcc_K0guajv4LyWMSJayIC_O9Z8T6DvfF_bLaNckdgCB9NJYeMbFGDEn9b8bDSFH1CCDA0Nhd_JOxKTKipf3_teXC8nqqhhDW7DY6dCXPcKQVmtM7YMAqw8TL16u8ijX07W_dFFUkY"/>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold tracking-widest text-secondary">REDIBAI</span>
+</div>
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-container-padding-mobile md:px-container-padding-desktop max-w-7xl mx-auto space-y-8">
+<!-- Greeting Section -->
+<section class="animate-in fade-in slide-in-from-bottom-4 duration-700">
+<h1 class="font-headline-md text-headline-md text-secondary">Hola, Ana.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Buen día para aprender.</p>
+</section>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-card-gap">
+<!-- Overall Average -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-secondary/30 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Promedio General</span>
+<span class="material-symbols-outlined text-secondary" data-icon="auto_graph">auto_graph</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-bold">8.7</span>
+<span class="text-secondary text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span> 0.2
+                    </span>
+</div>
+</div>
+<!-- Pending Tasks -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-secondary/30 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Tareas Pendientes</span>
+<span class="material-symbols-outlined text-primary" data-icon="task">task</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-bold">3</span>
+<span class="font-body-sm text-on-surface-variant">Para esta semana</span>
+</div>
+</div>
+<!-- Credits -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40 lg:col-span-1">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Créditos Totales</span>
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="workspace_premium">workspace_premium</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">142 / 200</span>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-secondary w-[71%]"></div>
+</div>
+</div>
+</div>
+<!-- Quick Link -->
+<div class="bg-secondary p-6 rounded-xl flex flex-col justify-between h-40 gold-glow cursor-pointer hover:scale-[1.02] active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-secondary uppercase font-bold">Inscripción USICAMM</span>
+<span class="material-symbols-outlined text-on-secondary" data-icon="verified">verified</span>
+</div>
+<div class="flex items-center gap-2 group">
+<span class="font-body-md text-on-secondary font-semibold">Iniciar trámite ahora</span>
+<span class="material-symbols-outlined text-on-secondary group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Main Dashboard Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-card-gap">
+<!-- Active Subject Card (Large Column) -->
+<div class="lg:col-span-2 space-y-6">
+<div class="relative overflow-hidden rounded-xl border border-outline-variant/30 aspect-[16/10] md:aspect-auto md:h-80 group">
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" data-alt="A wide-angle, cinematic photograph of a contemporary university library with floor-to-ceiling bookshelves and large windows showing a twilight sky. The lighting is moody and focused, with warm glow from desk lamps reflecting on polished dark wood surfaces. The color palette is dominated by deep navy blues and rich gold highlights, creating a sense of quiet intellectual rigor and high-end academic prestige." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhfC1KnDTBuJrrJwk5zkJm4wlgw1xAGpjzyYa6pRYmrYVSz8qCzkRDTYmSP1kllYXJfR8cUhhz2a5zmwWTwXDJiN1BEd3T_7B78FT__48uWLQQPaeesXPF6sQX_93QYgVwe8LiEzn_ZpIFXKnC94VvOq_5rXEsQGhbjnRLZqhCoTtlw_FDnHXhwKXaPpuZH5IfppJxNMQRok9QsoqUZR01RPyE7U0dby8Ya90mk4-FkCP2J9jq4zzR67Nuq27-u1w-_jISc4L54hU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full flex flex-col justify-end gap-4">
+<span class="font-label-caps text-label-caps text-secondary uppercase bg-secondary/10 px-3 py-1 rounded-full self-start">En curso ahora</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Metodología de la Investigación</h2>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="person">person</span> Dr. Luis Mendoza</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span> 10:30 AM - 12:00 PM</span>
+</div>
+<div class="space-y-2 mt-4">
+<div class="flex justify-between items-center text-sm font-label-caps text-on-surface-variant">
+<span>Progreso del módulo</span>
+<span>75%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full progress-gradient w-3/4 shadow-[0_0_15px_rgba(233,195,73,0.3)]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="glass-card rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Actividad reciente</h3>
+<button class="text-secondary font-label-caps text-label-caps hover:underline">Ver todo</button>
+</div>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-on-surface">Tarea calificada: <span class="font-semibold text-secondary">Ensayo de Ética</span></p>
+<p class="font-body-sm text-on-surface-variant">Calificación: 9.5 · Hace 2 horas</p>
+</div>
+</div>
+<div class="flex gap-4 border-t border-outline-variant/10 pt-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-on-surface">Nuevo mensaje en <span class="font-semibold text-primary">Comunidad REDIBAI</span></p>
+<p class="font-body-sm text-on-surface-variant">María López: "¿Alguien tiene el PDF de..." · Hace 4 horas</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Column -->
+<div class="space-y-6">
+<!-- Webinar Card -->
+<div class="glass-card rounded-xl overflow-hidden group">
+<div class="h-32 bg-surface-container-high relative">
+<img class="w-full h-full object-cover opacity-50" data-alt="A high-tech digital conference setting with a large glowing screen displaying abstract data visualizations in gold and cyan. The room is filled with soft bokeh lights, suggesting a professional virtual environment. The atmosphere is sophisticated and futuristic, representing a premium online learning event." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy4Pc8OHp1BYvATmYyLHf7XAsxlLB-nl6t-7plJ-jLWxHI5QaD8e2cWWE8_IDrLDB1h4UcHdBmmOL6FQiHaJZuhaNV8bA69z5fylHRYws4VLLArk3Xma219kaFnmkHczwtytzJmZ45ZToidDt4c0mlffFNmaHQdA9sefFIk33F-gHK684GbY09-nPkN-5R2GaX-b5wVthZb967UUmhrhWo1BtEVzQvN58kj6guSr3oSRo4UkKEdwfXev-VkafK6BjETpx7xeQ6yaU"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background to-transparent"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-error/20 text-error px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span> En Vivo
+                             </span>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<h4 class="font-headline-sm text-[20px] leading-tight text-on-surface">Webinar: Estrategias de USICAMM 2025</h4>
+<p class="font-body-sm text-on-surface-variant">Descubre las claves para el proceso de admisión docente con expertos invitados.</p>
+<button class="w-full py-3 bg-primary-container text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all duration-300 flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="videocam">videocam</span>
+                            Unirse ahora
+                        </button>
+</div>
+</div>
+<!-- Upcoming Deadlines -->
+<div class="glass-card rounded-xl p-6">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-6">Próximas Entregas</h3>
+<div class="space-y-5">
+<div class="flex gap-4 items-start group">
+<div class="bg-surface-container-high p-3 rounded-lg flex flex-col items-center min-w-[50px]">
+<span class="text-[10px] font-bold text-on-surface-variant">MAY</span>
+<span class="text-xl font-bold text-secondary">15</span>
+</div>
+<div>
+<h5 class="font-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors cursor-pointer">Mapa Conceptual</h5>
+<p class="font-body-sm text-on-surface-variant">Teorías del Aprendizaje</p>
+</div>
+</div>
+<div class="flex gap-4 items-start group">
+<div class="bg-surface-container-high p-3 rounded-lg flex flex-col items-center min-w-[50px]">
+<span class="text-[10px] font-bold text-on-surface-variant">MAY</span>
+<span class="text-xl font-bold text-on-surface-variant">20</span>
+</div>
+<div>
+<h5 class="font-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors cursor-pointer">Reporte de Lectura</h5>
+<p class="font-body-sm text-on-surface-variant">Investigación Educativa</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-2xl border-t border-outline-variant/10 shadow-lg flex justify-around items-center pt-3 pb-safe px-4 h-20 md:hidden">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-bold drop-shadow-gold-glow transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-[10px] mt-1">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:text-secondary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-caps text-[10px] mt-1">Académico</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:text-secondary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-caps text-[10px] mt-1">Comunidad</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:text-secondary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-caps text-[10px] mt-1">Mensajes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant hover:text-secondary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-[10px] mt-1">Perfil</span>
+</a>
+</nav>
+<!-- Desktop Floating Action -->
+<div class="fixed bottom-8 right-8 hidden md:block z-50">
+<button class="bg-secondary text-on-secondary-fixed font-bold px-6 py-4 rounded-full shadow-2xl gold-glow flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+            Nueva Consulta
+        </button>
+</div>
+<script>
+        // Micro-interactions and atmospheric subtle entrance
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>
