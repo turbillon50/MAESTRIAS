@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Bienvenido</title>
+<meta name="description" content="Bienvenido al ecosistema digital de REDIBAI Orizaba." />
+<meta name="theme-color" content="#111415" />
+<meta name="color-scheme" content="dark" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="REDIBAI" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Libre+Caslon+Text:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "secondary-fixed": "#ffe088", "outline": "#8f9097", "surface-container": "#1d2021",
+          "surface-dim": "#111415", "outline-variant": "#44474d", "primary-fixed-dim": "#b9c7e4",
+          "background": "#111415", "surface-container-lowest": "#0c0f10",
+          "secondary-fixed-dim": "#e9c349", "surface-container-low": "#191c1d",
+          "on-surface": "#e1e3e4", "primary-container": "#0a192f",
+          "on-surface-variant": "#c5c6cd", "tertiary": "#bcc7dc",
+          "surface-container-high": "#282a2b", "on-background": "#e1e3e4",
+          "primary": "#b9c7e4", "secondary": "#e9c349", "on-secondary": "#3c2f00",
+          "surface": "#111415"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: {
+          base: "8px", gutter: "24px", "container-padding-mobile": "20px",
+          "section-gap": "80px", "container-padding-desktop": "40px", "card-gap": "24px"
+        },
+        fontFamily: {
+          "label-caps": ["Inter"], "headline-sm": ["Libre Caslon Text"],
+          "display-lg": ["Libre Caslon Text"], "display-lg-mobile": ["Libre Caslon Text"],
+          "body-md": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"]
+        },
+        fontSize: {
+          "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+          "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+          "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+          "display-lg-mobile": ["36px", { lineHeight: "1.2", fontWeight: "700" }],
+          "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
+        }
+      }
+    }
+  };
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-panel {
+    background: rgba(17, 20, 21, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .gold-glow:hover { box-shadow: 0 4px 24px rgba(233, 195, 73, 0.25); }
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #ffe088 0%, #e9c349 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  body { min-height: max(884px, 100dvh); }
+  .hero-bg {
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(233,195,73,.12), transparent 50%),
+      radial-gradient(ellipse at 80% 60%, rgba(185,199,228,.08), transparent 55%),
+      linear-gradient(180deg, #0c0f10 0%, #111415 60%, #111415 100%);
+  }
+  #pwa-install-btn {
+    position: fixed; bottom: 96px; right: 16px; z-index: 60;
+    background: rgba(29,32,33,.85); backdrop-filter: blur(20px);
+    border: 1px solid rgba(233,195,73,.35); color: #ffe088;
+    border-radius: 9999px; padding: 10px 18px;
+    font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  #pwa-install-btn[hidden] { display: none; }
+  @media (min-width: 768px) { #pwa-install-btn { bottom: 24px; right: 24px; } }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 z-0 hero-bg"></div>
+
+  <header class="flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop h-16 w-full fixed top-0 left-0 z-50 transition-all bg-surface/70 backdrop-blur-xl border-b border-outline-variant/20">
+    <a href="/" class="flex items-center gap-3">
+      <span class="font-headline-sm text-headline-sm font-bold tracking-widest text-secondary">REDIBAI</span>
+    </a>
+    <div class="flex items-center gap-6">
+      <nav class="hidden md:flex gap-8">
+        <a class="font-label-caps text-label-caps text-secondary font-bold tracking-widest" href="/welcome.html">Inicio</a>
+        <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors tracking-widest" href="/dashboard.html">Campus Virtual</a>
+        <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors tracking-widest" href="/login.html">Acceso</a>
+      </nav>
+      <span id="pwa-status" data-state="online" class="hidden md:inline font-label-caps text-[10px] text-outline tracking-widest"></span>
+      <div class="p-2 rounded-full hover:bg-surface-container-high transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-secondary">notifications</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="relative z-10 container mx-auto px-container-padding-mobile text-center pt-24 pb-12">
+    <div class="max-w-4xl mx-auto space-y-gutter">
+      <div class="flex justify-center mb-8">
+        <div class="w-16 h-[2px] bg-secondary-fixed opacity-40"></div>
+      </div>
+      <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg mb-6 leading-tight">
+        Bienvenido a la nueva <span class="gold-gradient-text italic">era académica</span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant/90 max-w-2xl mx-auto leading-relaxed">
+        Tu ecosistema digital de excelencia, diseñado para inspirar y transformar tu trayectoria profesional en el entorno educativo más prestigioso de la región.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+        <a href="/login.html" class="px-12 py-4 bg-secondary text-on-secondary font-bold rounded-lg gold-glow transition-all active:scale-95 flex items-center justify-center gap-2">
+          Iniciar Sesión
+          <span class="material-symbols-outlined text-[18px]">login</span>
+        </a>
+        <a href="/dashboard.html" class="px-12 py-4 glass-panel text-secondary font-semibold rounded-lg hover:bg-white/5 transition-all active:scale-95 flex items-center justify-center gap-2">
+          Explorar Campus
+          <span class="material-symbols-outlined text-[18px]">school</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-card-gap mt-section-gap max-w-6xl mx-auto">
+      <div class="glass-panel p-8 rounded-xl text-left flex flex-col gap-4 group transition-all duration-500 hover:-translate-y-2">
+        <span class="material-symbols-outlined text-secondary-fixed text-[32px]">verified_user</span>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Prestigio Institucional</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant/80">Respaldado por décadas de liderazgo académico y certificaciones internacionales de alta calidad.</p>
+      </div>
+      <div class="glass-panel p-8 rounded-xl text-left flex flex-col gap-4 group transition-all duration-500 hover:-translate-y-2">
+        <span class="material-symbols-outlined text-secondary-fixed text-[32px]">bolt</span>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Innovación Digital</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant/80">Herramientas de vanguardia y aulas virtuales diseñadas para un aprendizaje inmersivo y colaborativo.</p>
+      </div>
+      <div class="glass-panel p-8 rounded-xl text-left flex flex-col gap-4 group transition-all duration-500 hover:-translate-y-2">
+        <span class="material-symbols-outlined text-secondary-fixed text-[32px]">groups</span>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Comunidad Global</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant/80">Conecta con una red exclusiva de expertos, investigadores y líderes de opinión en tu campo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full bg-surface-container-lowest/40 border-y border-outline-variant/10 py-12 relative z-10 mb-section-gap">
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 px-container-padding-mobile">
+      <div class="text-center">
+        <p class="font-display-lg-mobile text-secondary-fixed font-bold">15+</p>
+        <p class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-2">Licenciaturas</p>
+      </div>
+      <div class="text-center">
+        <p class="font-display-lg-mobile text-secondary-fixed font-bold">8k+</p>
+        <p class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-2">Alumnos</p>
+      </div>
+      <div class="text-center">
+        <p class="font-display-lg-mobile text-secondary-fixed font-bold">95%</p>
+        <p class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-2">Egresados Exitosos</p>
+      </div>
+      <div class="text-center">
+        <p class="font-display-lg-mobile text-secondary-fixed font-bold">24/7</p>
+        <p class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-2">Soporte Académico</p>
+      </div>
+    </div>
+  </section>
+
+  <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-3 pb-safe px-4 bg-surface-container-lowest/80 backdrop-blur-2xl border-t border-outline-variant/10 shadow-lg rounded-t-xl">
+    <a href="/welcome.html" class="flex flex-col items-center justify-center text-secondary font-bold">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-[10px] font-label-caps tracking-tighter">Inicio</span>
+    </a>
+    <a href="/dashboard.html" class="flex flex-col items-center justify-center text-outline">
+      <span class="material-symbols-outlined">school</span>
+      <span class="text-[10px] font-label-caps tracking-tighter">Campus</span>
+    </a>
+    <a href="/login.html" class="flex flex-col items-center justify-center text-outline">
+      <span class="material-symbols-outlined">person</span>
+      <span class="text-[10px] font-label-caps tracking-tighter">Ingresar</span>
+    </a>
+  </nav>
+</main>
+
+<button id="pwa-install-btn" hidden type="button" aria-label="Instalar la aplicación REDIBAI">
+  <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+  Instalar app
+</button>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    if (!header) return;
+    if (window.scrollY > 50) {
+      header.classList.add('bg-background/95');
+      header.classList.remove('bg-surface/70');
+    } else {
+      header.classList.remove('bg-background/95');
+      header.classList.add('bg-surface/70');
+    }
+  });
+</script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

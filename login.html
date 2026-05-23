@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI | Portal de Acceso</title>
+<meta name="description" content="Inicia sesión en el campus digital de REDIBAI Orizaba." />
+<meta name="theme-color" content="#111415" />
+<meta name="color-scheme" content="dark" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="REDIBAI" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "secondary-fixed": "#ffe088", "outline": "#8f9097", "surface-container": "#1d2021",
+          "outline-variant": "#44474d", "background": "#111415",
+          "surface-container-lowest": "#0c0f10", "secondary-fixed-dim": "#e9c349",
+          "surface-container-low": "#191c1d", "on-surface": "#e1e3e4",
+          "primary-container": "#0a192f", "on-surface-variant": "#c5c6cd",
+          "surface-container-high": "#282a2b", "secondary-container": "#af8d11",
+          "secondary": "#e9c349", "on-secondary": "#3c2f00", "surface": "#111415"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: {
+          base: "8px", gutter: "24px", "container-padding-mobile": "20px",
+          "section-gap": "80px", "container-padding-desktop": "40px", "card-gap": "24px"
+        },
+        fontFamily: {
+          "label-caps": ["Inter"], "headline-md": ["Libre Caslon Text"],
+          "headline-sm": ["Libre Caslon Text"], "body-md": ["Inter"], "body-sm": ["Inter"]
+        },
+        fontSize: {
+          "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+          "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+          "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+          "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+          "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
+        }
+      }
+    }
+  };
+</script>
+<style>
+  :root { --gold-glow: 0 4px 20px rgba(233, 195, 73, 0.15); }
+  body { font-family: 'Inter', sans-serif; background-color: #111415; min-height: max(884px, 100dvh); }
+  .font-headline { font-family: 'Libre Caslon Text', serif; }
+  .glass-panel {
+    background: rgba(29, 32, 33, 0.6);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .gold-button-glow:active { box-shadow: var(--gold-glow); transform: scale(0.98); }
+  .input-glow:focus-within { border-color: #e9c349; box-shadow: 0 0 0 1px #e9c349; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  #pwa-install-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 60;
+    background: rgba(29,32,33,.85); backdrop-filter: blur(20px);
+    border: 1px solid rgba(233,195,73,.35); color: #ffe088;
+    border-radius: 9999px; padding: 10px 18px;
+    font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  #pwa-install-btn[hidden] { display: none; }
+  .demo-banner {
+    background: rgba(233,195,73,.08);
+    border: 1px solid rgba(233,195,73,.25);
+    color: #ffe088;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 24px;
+  }
+</style>
+</head>
+<body class="text-on-surface selection:bg-secondary-fixed/30 flex flex-col items-center justify-center overflow-x-hidden relative">
+<div class="fixed inset-0 pointer-events-none z-0">
+  <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary-container/5 rounded-full blur-[120px]"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-primary-container/10 rounded-full blur-[150px]"></div>
+</div>
+
+<main class="w-full max-w-[480px] px-container-padding-mobile md:px-0 relative z-10 py-12">
+  <header class="flex flex-col items-center mb-12">
+    <a href="/" class="w-20 h-20 mb-6 flex items-center justify-center">
+      <span class="material-symbols-outlined text-[64px] text-secondary" style="font-variation-settings: 'FILL' 1;">school</span>
+    </a>
+    <h1 class="font-headline-sm text-headline-sm text-secondary uppercase tracking-[0.2em] mb-2">REDIBAI</h1>
+    <p class="font-label-caps text-label-caps text-on-surface-variant/60">CAMPUS DIGITAL EXCLUSIVO</p>
+  </header>
+
+  <section class="glass-panel rounded-xl p-8 shadow-2xl transition-all duration-500 hover:border-outline-variant/30">
+    <div class="mb-6">
+      <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Bienvenido</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">Inicia sesión en tu cuenta institucional.</p>
+    </div>
+
+    <div class="demo-banner">
+      <strong>Demo:</strong> usa cualquier correo y contraseña para entrar al dashboard.
+    </div>
+
+    <form id="login-form" class="space-y-6" novalidate>
+      <div class="space-y-2">
+        <label class="font-label-caps text-label-caps text-on-surface-variant ml-1" for="email">CORREO ELECTRÓNICO</label>
+        <div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
+          <span class="material-symbols-outlined text-[20px] text-outline mr-3">mail</span>
+          <input required class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="email" name="email" placeholder="nombre@redibai.edu.mx" type="email" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex justify-between items-center ml-1">
+          <label class="font-label-caps text-label-caps text-on-surface-variant" for="password">CONTRASEÑA</label>
+          <a class="font-body-sm text-body-sm text-secondary hover:text-secondary-fixed transition-colors" href="#">¿Olvidaste la contraseña?</a>
+        </div>
+        <div class="input-glow flex items-center bg-surface-container-low/50 rounded-lg border border-outline-variant/20 px-4 py-3.5 transition-all">
+          <span class="material-symbols-outlined text-[20px] text-outline mr-3">lock</span>
+          <input required class="bg-transparent border-none p-0 w-full focus:ring-0 text-body-md placeholder:text-outline-variant/50" id="password" name="password" placeholder="••••••••" type="password" autocomplete="current-password" />
+          <button class="text-outline hover:text-on-surface" type="button" id="toggle-pw" aria-label="Mostrar contraseña">
+            <span class="material-symbols-outlined text-[20px]">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="gold-button-glow w-full bg-secondary text-on-secondary font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-all hover:bg-secondary-fixed duration-300" type="submit">
+        <span class="font-label-caps text-label-caps tracking-widest">ENTRAR</span>
+        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+      </button>
+    </form>
+
+    <div class="relative my-8 flex items-center">
+      <div class="flex-grow border-t border-outline-variant/20"></div>
+      <span class="px-4 font-label-caps text-[10px] text-outline uppercase tracking-widest">o continúa con</span>
+      <div class="flex-grow border-t border-outline-variant/20"></div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <button type="button" class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-[20px] mr-3">g_translate</span>
+        <span class="font-body-sm text-body-sm">Google</span>
+      </button>
+      <button type="button" class="flex items-center justify-center py-3.5 px-4 bg-surface-container-high/30 border border-outline-variant/20 rounded-lg hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-[20px] mr-3" style="font-variation-settings: 'FILL' 1;">apple</span>
+        <span class="font-body-sm text-body-sm">Apple</span>
+      </button>
+    </div>
+  </section>
+
+  <footer class="mt-10 text-center">
+    <p class="font-body-sm text-body-sm text-on-surface-variant">
+      ¿Aún no tienes cuenta?
+      <a class="text-secondary font-semibold hover:underline decoration-secondary/30 underline-offset-4 ml-1" href="#">Crea una cuenta institucional</a>
+    </p>
+    <div class="mt-8 flex justify-center space-x-6">
+      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">TÉRMINOS</a>
+      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">PRIVACIDAD</a>
+      <a class="font-label-caps text-[10px] text-outline-variant hover:text-outline tracking-wider" href="#">SOPORTE</a>
+    </div>
+    <p class="mt-6 font-label-caps text-[10px] text-outline-variant/70 tracking-widest">
+      <span id="pwa-status" data-state="online"></span>
+    </p>
+  </footer>
+</main>
+
+<button id="pwa-install-btn" hidden type="button" aria-label="Instalar la aplicación REDIBAI">
+  <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+  Instalar app
+</button>
+
+<script>
+  const form = document.getElementById('login-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const pw = document.getElementById('password').value;
+    if (!email || !pw) return;
+    try { localStorage.setItem('redibai:user', email); } catch (_) {}
+    location.href = '/dashboard.html';
+  });
+
+  const toggle = document.getElementById('toggle-pw');
+  const pwInput = document.getElementById('password');
+  toggle.addEventListener('click', () => {
+    const isPw = pwInput.type === 'password';
+    pwInput.type = isPw ? 'text' : 'password';
+    toggle.querySelector('span').textContent = isPw ? 'visibility_off' : 'visibility';
+  });
+</script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>
