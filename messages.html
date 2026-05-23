@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Mensajes</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  let activeId = D.MESSAGES[0].id;
+
+  function buildThread(m) {
+    return [
+      { from:'them', text: m.preview },
+      { from:'me',   text: 'Recibido, lo reviso ahora mismo.' },
+      { from:'them', text: 'Gracias, te aviso por aquí cuando tengas la respuesta.' },
+      { from:'me',   text: 'Por cierto, ¿confirmamos la asesoría del jueves?' }
+    ];
+  }
+
+  function renderList(filter='') {
+    const q = filter.trim().toLowerCase();
+    return D.MESSAGES.filter(m => !q || (m.withName+' '+m.preview).toLowerCase().includes(q)).map(m => `
+      <button data-msg="${m.id}" class="msg-item ${m.id===activeId?'is-active':''}">
+        ${RedibaiApp.avatar(m.withName, m.hue, 36)}
+        <div class="msg-meta">
+          <div style="display:flex;justify-content:space-between"><span class="msg-name">${m.withName.split(' ').slice(0,2).join(' ')}</span><span class="muted" style="font-size:10px">${m.minAgo}m</span></div>
+          <div class="msg-preview">${m.preview}</div>
+        </div>
+        ${m.unread ? '<span class="msg-dot"></span>' : ''}
+      </button>`).join('');
+  }
+
+  function renderThread() {
+    const m = D.MESSAGES.find(x => x.id === activeId);
+    const thread = buildThread(m);
+    return `
+      <header style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06)">
+        ${RedibaiApp.avatar(m.withName, m.hue, 42)}
+        <div style="flex:1">
+          <div style="font-weight:600">${m.withName}</div>
+          <div class="muted" style="font-size:11px">${m.withRole} · <span class="chip chip-green"><span class="dot"></span>En línea</span></div>
+        </div>
+        <button class="icon-btn" onclick="RedibaiApp.toast({title:'Llamada iniciada',body:'Conectando con ${m.withName}…',icon:'call'})"><span class="material-symbols-outlined">call</span></button>
+        <button class="icon-btn" onclick="RedibaiApp.toast({title:'Videollamada',body:'Abriendo sala con ${m.withName}.',icon:'videocam'})"><span class="material-symbols-outlined">videocam</span></button>
+      </header>
+      <div class="msg-thread" id="thread">
+        ${thread.map(t => `<div class="bubble ${t.from}">${t.text}</div>`).join('')}
+      </div>
+      <form class="msg-composer" onsubmit="event.preventDefault(); handleSend();">
+        <input id="msg-input" placeholder="Escribe un mensaje…" autocomplete="off"/>
+        <button type="submit" class="btn btn-gold btn-sm"><span class="material-symbols-outlined">send</span></button>
+      </form>`;
+  }
+
+  const html = `
+    <style>
+      .messenger { display:grid; grid-template-columns: 320px 1fr; gap:0; min-height:70vh; background:rgba(29,32,33,.4); border:1px solid rgba(255,255,255,.05); border-radius:16px; overflow:hidden; }
+      @media (max-width:900px){ .messenger { grid-template-columns: 1fr; } .msg-side { display:none; } }
+      .msg-side { border-right:1px solid rgba(255,255,255,.05); display:flex; flex-direction:column; }
+      .msg-search { padding:12px; border-bottom:1px solid rgba(255,255,255,.05); }
+      .msg-search input { width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:9999px; padding:8px 14px; color:var(--on-surface); font-size:13px; }
+      .msg-list { overflow-y:auto; max-height:60vh; flex:1; }
+      .msg-item { display:flex; gap:10px; padding:10px 14px; background:transparent; border:0; width:100%; text-align:left; color:var(--on-surface); cursor:pointer; border-bottom:1px solid rgba(255,255,255,.03); position:relative; }
+      .msg-item:hover { background:rgba(255,255,255,.03); }
+      .msg-item.is-active { background:linear-gradient(90deg, rgba(233,195,73,.1), transparent); border-left:2px solid var(--gold); }
+      .msg-meta { flex:1; min-width:0; }
+      .msg-name { font-size:13px; font-weight:600; }
+      .msg-preview { font-size:11px; color:var(--outline); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .msg-dot { position:absolute; top:14px; right:12px; width:8px; height:8px; background:var(--gold); border-radius:50%; }
+      .msg-thread { padding:18px; display:flex; flex-direction:column; gap:10px; max-height:55vh; overflow-y:auto; }
+      .bubble { padding:10px 14px; border-radius:14px; max-width:70%; font-size:13px; line-height:1.45; }
+      .bubble.them { background:rgba(255,255,255,.06); align-self:flex-start; border-bottom-left-radius:4px; }
+      .bubble.me   { background:var(--gold); color:var(--on-gold); align-self:flex-end; border-bottom-right-radius:4px; }
+      .msg-composer { display:flex; gap:8px; padding:12px; border-top:1px solid rgba(255,255,255,.05); }
+      .msg-composer input { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:9999px; padding:10px 16px; color:var(--on-surface); font-size:13px; }
+      .msg-composer input:focus { outline:0; border-color:var(--gold); }
+    </style>
+
+    <div class="messenger">
+      <aside class="msg-side">
+        <div class="msg-search"><input id="msg-filter" placeholder="Buscar conversación…"/></div>
+        <div class="msg-list" id="msg-list">${renderList()}</div>
+      </aside>
+      <section class="msg-main" id="msg-main">${renderThread()}</section>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'messages', title:'Mensajes', subtitle:`${D.MESSAGES.filter(m=>m.unread).length} sin leer · ${D.MESSAGES.length} conversaciones`, html });
+
+  document.getElementById('msg-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-msg]');
+    if (!btn) return;
+    activeId = btn.dataset.msg;
+    const m = D.MESSAGES.find(x => x.id === activeId);
+    if (m) m.unread = false;
+    document.getElementById('msg-list').innerHTML = renderList(document.getElementById('msg-filter').value);
+    document.getElementById('msg-main').innerHTML = renderThread();
+  });
+
+  document.getElementById('msg-filter').addEventListener('input', (e) => {
+    document.getElementById('msg-list').innerHTML = renderList(e.target.value);
+  });
+
+  window.handleSend = function () {
+    const input = document.getElementById('msg-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const thread = document.getElementById('thread');
+    const b = document.createElement('div');
+    b.className = 'bubble me';
+    b.textContent = text;
+    thread.appendChild(b);
+    thread.scrollTop = thread.scrollHeight;
+    input.value = '';
+    setTimeout(() => {
+      const r = document.createElement('div');
+      r.className = 'bubble them';
+      r.textContent = '¡Recibido! Te respondo en un momento.';
+      thread.appendChild(r);
+      thread.scrollTop = thread.scrollHeight;
+    }, 900);
+  };
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

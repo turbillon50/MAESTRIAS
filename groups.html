@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Grupos</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+
+  const cards = D.GROUPS.map(g => {
+    const loc = D.getLocation(g.locationId);
+    const studs = D.studentsOfGroup(g.id);
+    const avg = (studs.reduce((a,s)=>a+s.gpa,0)/studs.length).toFixed(2);
+    const att = Math.round(studs.reduce((a,s)=>a+s.attendance,0)/studs.length);
+    const online = studs.filter(s=>s.online).length;
+    const atRisk = studs.filter(s=>s.status==='en riesgo').length;
+    const courses = D.coursesOfGroup(g.id);
+    const progress = Math.round(courses.reduce((a,c)=>a+c.progress,0)/courses.length);
+
+    const avatars = studs.slice(0,6).map(s => `<span class="avatar-wrap ${s.online?'online':''}">${RedibaiApp.avatar(s.name, s.hue, 28)}</span>`).join('');
+
+    return `
+      <a href="/group.html?id=${g.id}" class="card" style="text-decoration:none;display:block">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+          <div>
+            <div class="eyebrow">${g.type === 'doctorado' ? 'Doctorado' : 'Maestría'} · ${g.cohort}</div>
+            <h3 style="margin:6px 0 4px;font-family:'Libre Caslon Text',serif;font-size:22px;color:${g.color}">${g.name}</h3>
+            <div class="muted" style="font-size:13px">${g.program}</div>
+          </div>
+          <span class="material-symbols-outlined" style="color:${g.color};font-size:32px">${g.type==='doctorado'?'school':'groups'}</span>
+        </div>
+
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+          <span class="chip chip-gray"><span class="material-symbols-outlined" style="font-size:12px">location_on</span>${loc.city}</span>
+          <span class="chip chip-gold">${studs.length} alumnos</span>
+          <span class="chip chip-blue">${courses.length} materias</span>
+          ${atRisk ? `<span class="chip chip-red">${atRisk} en riesgo</span>` : ''}
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          ${avatars}
+          ${studs.length > 6 ? `<span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);font-size:11px;color:var(--outline)">+${studs.length-6}</span>` : ''}
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--outline);margin-bottom:4px">
+          <span>Avance del ciclo</span><span style="color:var(--gold)">${progress}%</span>
+        </div>
+        <div class="progress"><i style="width:${progress}%;background:linear-gradient(90deg, ${g.color}, var(--primary))"></i></div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:12px">
+          <span><b style="color:var(--gold)">${avg}</b> <span class="muted">promedio</span></span>
+          <span><b>${att}%</b> <span class="muted">asistencia</span></span>
+          <span><span class="chip chip-green">${online} en línea</span></span>
+        </div>
+      </a>`;
+  }).join('');
+
+  const html = `
+    <div class="grid grid-4" style="margin-bottom:24px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">school</span></span><div class="eyebrow">Maestrías</div><div class="value">5</div><div class="hint">${D.GROUPS.filter(g=>g.type==='maestria').reduce((a,g)=>a+g.size,0)} alumnos</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Doctorados</div><div class="value">3</div><div class="hint">${D.GROUPS.filter(g=>g.type==='doctorado').reduce((a,g)=>a+g.size,0)} doctorandos</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">menu_book</span></span><div class="eyebrow">Materias activas</div><div class="value">${D.COURSES.length}</div><div class="hint">3 por grupo</div></div>
+      <div class="card stat-card kpi-gold"><span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span><div class="eyebrow">Total académico</div><div class="value">400</div><div class="hint">8 grupos · 7 sedes</div></div>
+    </div>
+
+    <div class="filters">
+      <input class="filter-input" placeholder="Buscar grupo o programa…" id="g-search" style="flex:1;min-width:240px" />
+      <select class="filter-select" id="g-type">
+        <option value="">Todos los niveles</option>
+        <option value="maestria">Maestría</option>
+        <option value="doctorado">Doctorado</option>
+      </select>
+      <select class="filter-select" id="g-loc">
+        <option value="">Todas las sedes</option>
+        ${D.LOCATIONS.map(l => `<option value="${l.id}">${l.name}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="grid grid-3" id="groups-grid">${cards}</div>
+  `;
+
+  RedibaiApp.mount({ active:'groups', title:'Grupos', subtitle:'5 grupos de maestría · 3 cohortes doctorales · 400 alumnos', html });
+
+  // Filters
+  function applyFilters() {
+    const q = document.getElementById('g-search').value.trim().toLowerCase();
+    const type = document.getElementById('g-type').value;
+    const loc = document.getElementById('g-loc').value;
+    document.querySelectorAll('#groups-grid > a').forEach((card, idx) => {
+      const g = D.GROUPS[idx];
+      const match = (!q || (g.name+' '+g.program).toLowerCase().includes(q))
+        && (!type || g.type === type)
+        && (!loc || g.locationId === loc);
+      card.style.display = match ? '' : 'none';
+    });
+  }
+  ['g-search','g-type','g-loc'].forEach(id => {
+    document.getElementById(id).addEventListener('input', applyFilters);
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

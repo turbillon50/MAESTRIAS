@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Calendario</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const filterGroup = new URLSearchParams(location.search).get('group') || '';
+
+  let events = D.EVENTS.slice();
+  if (filterGroup) events = events.filter(e => e.groupId === filterGroup);
+
+  // Build calendar grid for current month
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd = new Date(today.getFullYear(), today.getMonth()+1, 0);
+  const startOffset = (monthStart.getDay() + 6) % 7; // Monday-first
+  const daysInMonth = monthEnd.getDate();
+
+  const monthName = monthStart.toLocaleDateString('es-MX', { month:'long', year:'numeric' });
+
+  const eventsByDay = {};
+  events.forEach(e => {
+    const d = new Date(e.date);
+    if (d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear()) {
+      const key = d.getDate();
+      (eventsByDay[key] || (eventsByDay[key] = [])).push(e);
+    }
+  });
+
+  const cells = [];
+  for (let i = 0; i < startOffset; i++) cells.push('<div class="cal-cell empty"></div>');
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate();
+    const list = eventsByDay[d] || [];
+    cells.push(`
+      <div class="cal-cell ${isToday ? 'today' : ''}">
+        <div class="cal-day">${d}</div>
+        ${list.slice(0,3).map(e => `<a href="/group.html?id=${e.groupId}" class="cal-event" style="border-left-color:${e.color}">${e.label}</a>`).join('')}
+        ${list.length > 3 ? `<div class="cal-more">+${list.length-3} más</div>` : ''}
+      </div>`);
+  }
+
+  const upcoming = events
+    .filter(e => new Date(e.date).getTime() > Date.now())
+    .slice(0, 12)
+    .map(e => {
+      const c = D.getCourse(e.courseId);
+      const l = D.getLocation(e.locationId);
+      const g = D.getGroup(e.groupId);
+      return `
+        <div class="feed-item">
+          <div class="feed-icon" style="background:${e.color}1a;color:${e.color}"><span class="material-symbols-outlined">${e.icon}</span></div>
+          <div class="feed-body">
+            <div class="feed-text"><b>${e.label}</b> — ${c.name}</div>
+            <div class="feed-time">${RedibaiApp.fmtDate(e.date)} · ${l.city} · ${g.name}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+  const html = `
+    <style>
+      .cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; }
+      .cal-head { font-size:11px; letter-spacing:.16em; color:var(--outline); text-transform:uppercase; padding:6px 8px; text-align:center; }
+      .cal-cell { background:rgba(29,32,33,.4); border:1px solid rgba(255,255,255,.04); border-radius:8px; min-height:96px; padding:6px; display:flex; flex-direction:column; gap:4px; transition:.15s; }
+      .cal-cell.empty { background:transparent; border-color:transparent; }
+      .cal-cell.today { border-color:var(--gold); background:rgba(233,195,73,.06); }
+      .cal-day { font-size:12px; color:var(--on-surface-2); font-weight:600; }
+      .cal-cell.today .cal-day { color:var(--gold); }
+      .cal-event { font-size:10px; padding:2px 6px; border-left:2px solid; background:rgba(255,255,255,.04); border-radius:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--on-surface-2); }
+      .cal-event:hover { color:var(--gold); background:rgba(255,255,255,.07); }
+      .cal-more { font-size:10px; color:var(--outline); padding-left:6px; }
+    </style>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px">
+      <div class="card">
+        <div class="card-title">
+          <h2 style="text-transform:capitalize">${monthName}</h2>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm"><span class="material-symbols-outlined">chevron_left</span></button>
+            <button class="btn btn-ghost btn-sm">Hoy</button>
+            <button class="btn btn-ghost btn-sm"><span class="material-symbols-outlined">chevron_right</span></button>
+          </div>
+        </div>
+        <div class="cal-grid">
+          ${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => `<div class="cal-head">${d}</div>`).join('')}
+          ${cells.join('')}
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--outline)">
+          <span><span style="display:inline-block;width:8px;height:8px;background:#b9c7e4;border-radius:50%;margin-right:4px"></span>Clase</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#e9c349;border-radius:50%;margin-right:4px"></span>Entrega</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#ffb4ab;border-radius:50%;margin-right:4px"></span>Examen</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#ffe088;border-radius:50%;margin-right:4px"></span>Webinar</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#bcc7dc;border-radius:50%;margin-right:4px"></span>Reunión</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><h2>Próximas actividades</h2><span class="material-symbols-outlined">event_upcoming</span></div>
+        <div class="feed">${upcoming}</div>
+      </div>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'calendar', title:'Calendario académico', subtitle:`${events.length} eventos programados${filterGroup ? ' (filtro por grupo activo)' : ''}`, html });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

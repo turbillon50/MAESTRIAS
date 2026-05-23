@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Grupo</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const gid = new URLSearchParams(location.search).get('id') || 'g6';
+  const g = D.getGroup(gid) || D.GROUPS[0];
+  const loc = D.getLocation(g.locationId);
+  const studs = D.studentsOfGroup(g.id);
+  const courses = D.coursesOfGroup(g.id);
+  const avg = (studs.reduce((a,s)=>a+s.gpa,0)/studs.length).toFixed(2);
+  const att = Math.round(studs.reduce((a,s)=>a+s.attendance,0)/studs.length);
+  const online = studs.filter(s=>s.online).length;
+  const atRisk = studs.filter(s=>s.status==='en riesgo').length;
+  const outstanding = studs.filter(s=>s.status==='destacado').length;
+
+  const courseCards = courses.map(c => {
+    const t = D.getTeacher(c.teacherId);
+    return `
+      <div class="card">
+        <div class="card-title">
+          <div>
+            <div class="eyebrow">${c.code}</div>
+            <h3>${c.name}</h3>
+          </div>
+          <span class="chip chip-gold">${c.progress}%</span>
+        </div>
+        <div class="muted" style="font-size:12px;margin-bottom:10px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">person</span> ${t.name}</div>
+        <div class="muted" style="font-size:12px;margin-bottom:14px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">schedule</span> ${c.schedule}</div>
+        <div class="progress"><i style="width:${c.progress}%"></i></div>
+        <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:12px">
+          <span class="muted">Promedio <b style="color:var(--gold)">${c.avgGrade}</b></span>
+          <span class="muted">${c.assignmentsPending} tareas pendientes</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const studentRows = studs.map(s => {
+    const statusChip =
+      s.status === 'destacado'   ? 'chip-gold'   :
+      s.status === 'al corriente'? 'chip-green'  :
+      s.status === 'regular'     ? 'chip-blue'   : 'chip-red';
+    return `
+      <tr onclick="location.href='/student.html?id=${s.id}'" style="cursor:pointer">
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="avatar-wrap ${s.online?'online':''}">${RedibaiApp.avatar(s.name, s.hue, 32)}</span>
+            <div><div>${s.name}</div><div class="muted" style="font-size:11px">${s.email}</div></div>
+          </div>
+        </td>
+        <td><b style="color:var(--gold)">${s.gpa}</b></td>
+        <td>${s.credits}</td>
+        <td>${s.attendance}%</td>
+        <td><span class="chip ${statusChip}">${s.status}</span></td>
+        <td>${s.tuitionPaid ? '<span class="chip chip-green">Al día</span>' : '<span class="chip chip-red">Pendiente</span>'}</td>
+        <td class="muted">${s.online ? 'En línea' : RedibaiApp.timeAgo(Date.now() - s.lastSeenMinAgo*60000)}</td>
+      </tr>`;
+  }).join('');
+
+  const html = `
+    <a href="/groups.html" class="muted" style="font-size:12px;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px">
+      <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Todos los grupos
+    </a>
+
+    <div class="card" style="background:linear-gradient(135deg, ${g.color}22, rgba(29,32,33,.4));border-color:${g.color}33;margin-bottom:24px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px">
+        <div>
+          <div class="eyebrow">${g.type === 'doctorado' ? 'Doctorado' : 'Maestría'} · Cohorte ${g.cohort}</div>
+          <h2 style="margin:6px 0;font-family:'Libre Caslon Text',serif;font-size:32px;color:${g.color}">${g.name}</h2>
+          <div style="font-size:16px">${g.program}</div>
+          <div class="muted" style="font-size:13px;margin-top:6px">
+            <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">location_on</span> ${loc.name} — ${loc.city}, ${loc.state}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="RedibaiApp.toast({title:'Mensaje masivo enviado',body:'Se notificó a ${studs.length} alumnos del grupo ${g.name}.',icon:'send',kind:'success'})"><span class="material-symbols-outlined">campaign</span>Enviar comunicado</button>
+          <a href="/calendar.html?group=${g.id}" class="btn btn-ghost"><span class="material-symbols-outlined">event</span>Calendario</a>
+          <button class="btn btn-gold" onclick="RedibaiApp.toast({title:'Exportando lista',body:'Generando reporte PDF de ${studs.length} alumnos…',icon:'download'})"><span class="material-symbols-outlined">download</span>Exportar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:24px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span><div class="eyebrow">Alumnos</div><div class="value">${studs.length}</div><div class="hint">${online} en línea</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span><div class="eyebrow">Promedio</div><div class="value">${avg}</div><div class="hint">Asistencia ${att}%</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Destacados</div><div class="value">${outstanding}</div><div class="hint">Promedio ≥ 8.8</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(255,180,171,.12);color:var(--error)"><span class="material-symbols-outlined">warning</span></span><div class="eyebrow">En riesgo</div><div class="value">${atRisk}</div><div class="hint">Requieren tutoría</div></div>
+    </div>
+
+    <h2 style="font-family:'Libre Caslon Text',serif;margin:0 0 12px">Materias del ciclo</h2>
+    <div class="grid grid-3" style="margin-bottom:32px">${courseCards}</div>
+
+    <h2 style="font-family:'Libre Caslon Text',serif;margin:0 0 12px">Listado de alumnos · ${studs.length}</h2>
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>Alumno</th><th>Promedio</th><th>Créditos</th><th>Asistencia</th><th>Estado</th><th>Colegiatura</th><th>Última actividad</th></tr>
+        </thead>
+        <tbody>${studentRows}</tbody>
+      </table>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'groups', title:g.name, subtitle:g.program, html });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

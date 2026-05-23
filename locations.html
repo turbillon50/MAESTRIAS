@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Sedes</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const physical = D.LOCATIONS.filter(l => l.lat !== null);
+
+  // Project lat/lng onto SVG coordinates (rough Mexico bbox)
+  const BBOX = { latMin: 16, latMax: 22, lngMin: -100, lngMax: -94 };
+  const W = 720, H = 380;
+  function project(l) {
+    const x = ((l.lng - BBOX.lngMin) / (BBOX.lngMax - BBOX.lngMin)) * W;
+    const y = ((BBOX.latMax - l.lat) / (BBOX.latMax - BBOX.latMin)) * H;
+    return { x, y };
+  }
+
+  const pins = physical.map(l => {
+    const { x, y } = project(l);
+    const studs = D.studentsOfLocation(l.id).length;
+    const r = 6 + Math.sqrt(studs);
+    return `
+      <g class="map-pin" onclick="document.getElementById('loc-${l.id}').scrollIntoView({behavior:'smooth',block:'center'})">
+        <circle cx="${x}" cy="${y}" r="${r+10}" fill="${l.color}" opacity=".15"/>
+        <circle cx="${x}" cy="${y}" r="${r}" fill="${l.color}" stroke="#111415" stroke-width="2"/>
+        <text x="${x+r+6}" y="${y+4}" fill="${l.color}" font-size="11" font-weight="700">${l.city}</text>
+        <text x="${x+r+6}" y="${y+18}" fill="#8f9097" font-size="10">${studs} alumnos</text>
+      </g>`;
+  }).join('');
+
+  const cards = D.LOCATIONS.map(l => {
+    const studs = D.studentsOfLocation(l.id);
+    const groups = D.GROUPS.filter(g => g.locationId === l.id);
+    const online = studs.filter(s=>s.online).length;
+    const photo = PHOTOS.loc[l.id] || PHOTOS.architecture;
+    return `
+      <div id="loc-${l.id}" class="card" style="padding:0;overflow:hidden">
+        <div style="position:relative;height:170px;overflow:hidden">
+          <img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg, transparent 30%, rgba(0,0,0,.78) 100%)"></div>
+          <div style="position:absolute;left:16px;right:16px;bottom:14px;color:#fff">
+            <div style="font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:600">${l.isHQ ? 'Sede principal' : (l.id==='loc-vir' ? 'Plataforma' : 'Sede regional')}</div>
+            <h3 style="margin:4px 0 0;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:#fff">${l.name}</h3>
+            <div style="font-size:12px;color:rgba(255,255,255,.8);margin-top:2px">${l.city}, ${l.state}</div>
+          </div>
+        </div>
+        <div style="padding:16px 18px 4px">
+          <div class="muted" style="font-size:12px">${l.address}</div>
+        </div>
+        <div style="display:flex;gap:14px;padding:8px 18px 0">
+          <div><b style="font-size:20px">${studs.length}</b><div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em">Alumnos</div></div>
+          <div><b style="font-size:20px;color:var(--success)">${online}</b><div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em">En línea</div></div>
+          <div><b style="font-size:20px">${groups.length}</b><div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em">Grupos</div></div>
+        </div>
+        <div style="padding:0 18px 18px">
+          <div class="divider"></div>
+          <div class="muted" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Grupos en esta sede</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${groups.map(g => `<a href="/group.html?id=${g.id}" style="display:flex;justify-content:space-between;padding:8px;background:var(--hairline);border-radius:6px;font-size:12px"><span><b style="color:${g.color}">${g.name}</b> · ${g.program}</span><span class="muted">${g.size}</span></a>`).join('') || '<div class="muted" style="font-size:12px">—</div>'}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const html = `
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">apartment</span></span><div class="eyebrow">Sedes físicas</div><div class="value">${physical.length}</div><div class="hint">Más Campus Virtual</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span><div class="eyebrow">Alumnos totales</div><div class="value">400</div><div class="hint">Distribuidos por sede</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">wifi</span></span><div class="eyebrow">Conexión activa</div><div class="value">${D.aggregate().online}</div><div class="hint">Distribución en tiempo real</div></div>
+      <div class="card stat-card kpi-gold"><span class="icon-bubble"><span class="material-symbols-outlined">location_on</span></span><div class="eyebrow">Cobertura</div><div class="value">3 estados</div><div class="hint">Veracruz, Puebla, CDMX</div></div>
+    </div>
+
+    <div class="map-wrap" style="margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h2 style="margin:0;font-family:'Libre Caslon Text',serif;font-size:18px">Mapa de sedes</h2>
+        <span class="chip chip-gold"><span class="dot"></span>Centro-sur de México</span>
+      </div>
+      <svg class="map-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="mxGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#b9c7e4" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#b9c7e4" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="${W}" height="${H}" fill="url(#mxGlow)"/>
+        <!-- Stylized Mexico land mass (very rough silhouette) -->
+        <path d="M 30 230 Q 80 180 150 200 Q 220 195 280 230 Q 330 240 380 245 Q 430 250 470 240 Q 510 230 540 240 Q 580 250 620 270 Q 660 290 690 280 L 700 320 Q 660 340 600 335 Q 540 330 480 340 Q 420 350 360 340 Q 300 335 240 340 Q 180 345 130 330 Q 80 320 50 290 Z"
+              fill="#1d2021" stroke="#44474d" stroke-width="1.2" opacity=".7"/>
+        <!-- grid -->
+        <g stroke="#44474d" stroke-width=".3" opacity=".3">
+          ${[0.25, 0.5, 0.75].map(p => `<line x1="0" y1="${H*p}" x2="${W}" y2="${H*p}"/><line y1="0" x1="${W*p}" y2="${H}" x2="${W*p}"/>`).join('')}
+        </g>
+        ${pins}
+      </svg>
+    </div>
+
+    <h2 style="font-family:'Libre Caslon Text',serif;margin:0 0 12px">Detalles por sede</h2>
+    <div class="grid grid-3">${cards}</div>
+  `;
+
+  RedibaiApp.mount({ active:'locations', title:'Sedes', subtitle:`${physical.length} sedes físicas + Campus Virtual · ${D.STUDENTS.length} alumnos distribuidos`, html });
+
+  // Scroll to anchor on load if present
+  if (location.hash) {
+    setTimeout(() => {
+      const el = document.querySelector(location.hash);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 200);
+  }
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

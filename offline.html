@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REDIBAI — Sin conexión</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; min-height: 100vh;
+    background: radial-gradient(ellipse at center, #1d2021 0%, #0c0f10 70%);
+    color: #e1e3e4; font-family: Inter, system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+  }
+  .card {
+    background: rgba(29,32,33,.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px; padding: 48px 32px; max-width: 420px;
+  }
+  h1 { font-family: 'Libre Caslon Text', serif; color: #e9c349; margin: 24px 0 8px; font-size: 28px; }
+  p { color: #c5c6cd; margin: 0 0 24px; line-height: 1.6; }
+  .icon { font-size: 64px; color: #e9c349; opacity: .8; }
+  button {
+    background: #e9c349; color: #3c2f00; border: 0; padding: 12px 28px;
+    border-radius: 9999px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    font-size: 12px; cursor: pointer;
+  }
+  button:hover { background: #ffe088; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="material-symbols-outlined icon">cloud_off</span>
+    <h1>Estás sin conexión</h1>
+    <p>No pudimos cargar esta página. Revisa tu conexión a internet — REDIBAI seguirá disponible en cuanto vuelvas en línea.</p>
+    <button onclick="location.reload()">Reintentar</button>
+  </div>
+  <script>
+    window.addEventListener('online', () => location.reload());
+  </script>
+</body>
+</html>

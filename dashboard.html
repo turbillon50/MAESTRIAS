@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Mi dashboard</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const session = RedibaiApp.getSession();
+  const isAdmin = session.role === 'admin';
+
+  // For the demo, show the "Mi dashboard" as if signed in as a student of Grupo 6
+  const me = D.STUDENTS[0]; // u001
+  const g = D.getGroup(me.groupId);
+  const l = D.getLocation(me.locationId);
+  const courses = D.coursesOfGroup(me.groupId);
+  const liveCourse = courses[0];
+  const teacher = D.getTeacher(liveCourse.teacherId);
+
+  const upcoming = D.EVENTS.filter(e => e.groupId === me.groupId && new Date(e.date).getTime() > Date.now()).slice(0,5);
+
+  const activityHtml = D.ACTIVITY.slice(0,8).map(a => `
+    <div class="feed-item">
+      <div class="feed-icon" style="background:${a.color}1a;color:${a.color}"><span class="material-symbols-outlined">${a.icon}</span></div>
+      <div class="feed-body"><div class="feed-text">${a.html}</div><div class="feed-time" data-time-ago="${a.atMs}">${RedibaiApp.timeAgo(a.atMs)}</div></div>
+    </div>`).join('');
+
+  const upcomingHtml = upcoming.map(e => `
+    <div class="feed-item">
+      <div class="feed-icon" style="background:${e.color}1a;color:${e.color}"><span class="material-symbols-outlined">${e.icon}</span></div>
+      <div class="feed-body">
+        <div class="feed-text"><b>${e.label}</b> — ${D.getCourse(e.courseId).name}</div>
+        <div class="feed-time">${RedibaiApp.fmtDate(e.date)}</div>
+      </div>
+    </div>`).join('');
+
+  const html = `
+    ${isAdmin ? `<div class="card" style="margin-bottom:16px;border-color:rgba(233,195,73,.25);background:linear-gradient(90deg, rgba(233,195,73,.06), transparent)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><span class="chip chip-gold">VISTA ADMIN</span> Estás viendo el dashboard del alumno. Cambia al panel de control para gestionar la academia.</div>
+        <a href="/admin.html" class="btn btn-gold btn-sm"><span class="material-symbols-outlined">space_dashboard</span>Ir al panel</a>
+      </div>
+    </div>` : ''}
+
+    <section style="margin-bottom:20px">
+      <h2 style="font-family:'Libre Caslon Text',serif;font-size:28px;margin:0;color:var(--gold)">Hola, ${me.firstName}.</h2>
+      <p class="muted" style="margin:4px 0 0">${g.program} · ${g.name} · ${l.city}</p>
+    </section>
+
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span><div class="eyebrow">Promedio general</div><div class="value">${me.gpa}</div><div class="hint delta"><span class="material-symbols-outlined" style="font-size:14px">arrow_upward</span>+0.2 este mes</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">task</span></span><div class="eyebrow">Tareas pendientes</div><div class="value">${me.assignments.pending}</div><div class="hint">Para esta semana</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Créditos</div><div class="value">${me.credits}/200</div><div class="hint"><div class="progress" style="margin-top:6px"><i style="width:${me.credits/2}%"></i></div></div></div>
+      <a href="#" class="card stat-card kpi-gold" onclick="RedibaiApp.toast({title:'Trámite iniciado',body:'Abriendo formulario USICAMM 2026.',icon:'verified'})"><span class="icon-bubble"><span class="material-symbols-outlined">verified</span></span><div class="eyebrow">Trámite USICAMM</div><div class="value" style="font-size:20px;font-family:Inter">Iniciar ahora</div><div class="hint">Cierre 31 de mayo</div></a>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px; margin-bottom:24px">
+      <div>
+        <!-- Live class hero -->
+        <div class="card" style="background:linear-gradient(135deg, rgba(10,25,47,.6), rgba(29,32,33,.4));margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+            <div>
+              <span class="chip chip-red"><span class="dot"></span>EN VIVO AHORA</span>
+              <h2 style="margin:10px 0 4px;font-family:'Libre Caslon Text',serif;font-size:24px">${liveCourse.name}</h2>
+              <div class="muted" style="font-size:13px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">person</span> ${teacher.name} · <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">schedule</span> ${liveCourse.schedule}</div>
+            </div>
+            <button class="btn btn-gold" onclick="RedibaiApp.toast({title:'Conectando…',body:'Entrando al aula virtual de ${liveCourse.name}',icon:'videocam'})"><span class="material-symbols-outlined">videocam</span>Entrar al aula</button>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--outline);margin-bottom:4px">
+            <span>Progreso del módulo</span><span style="color:var(--gold)">${liveCourse.progress}%</span>
+          </div>
+          <div class="progress"><i style="width:${liveCourse.progress}%"></i></div>
+        </div>
+
+        <!-- My courses -->
+        <div class="card">
+          <div class="card-title"><h2>Mis materias</h2><a href="/courses.html" class="muted" style="font-size:12px">Ver todas →</a></div>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+            ${courses.map(c => `
+              <div style="background:rgba(255,255,255,.03);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.04)">
+                <div class="eyebrow">${c.code}</div>
+                <div style="font-weight:600;margin:6px 0">${c.name}</div>
+                <div class="progress" style="margin:8px 0"><i style="width:${c.progress}%"></i></div>
+                <div class="muted" style="font-size:12px">${c.progress}% completado · <b style="color:var(--gold)">${c.avgGrade}</b></div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title"><h2>Próximas entregas</h2><span class="material-symbols-outlined">event_upcoming</span></div>
+          <div class="feed">${upcomingHtml || '<div class="muted">Sin entregas próximas</div>'}</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Actividad reciente</h2><span class="chip chip-red"><span class="dot"></span>LIVE</span></div>
+          <div class="feed">${activityHtml}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <a href="/messages.html" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Mensajes</h3><span class="material-symbols-outlined">forum</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${D.MESSAGES.filter(m=>m.unread).length}</div>
+        <div class="muted" style="font-size:13px">conversaciones sin leer</div>
+      </a>
+      <a href="/calendar.html" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Calendario</h3><span class="material-symbols-outlined">calendar_month</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${D.EVENTS.filter(e => new Date(e.date) > Date.now()).length}</div>
+        <div class="muted" style="font-size:13px">eventos próximos</div>
+      </a>
+      <a href="/group.html?id=${me.groupId}" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Mi grupo</h3><span class="material-symbols-outlined">groups</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${g.size}</div>
+        <div class="muted" style="font-size:13px">compañeros en ${g.name}</div>
+      </a>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'dashboard', title:'Mi dashboard', subtitle:`${g.name} · ${l.city}`, html });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

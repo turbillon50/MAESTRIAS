@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Reportes</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const agg = D.aggregate();
+
+  // ---------- SVG charts (no deps) ----------
+  function lineChart(values, color='#e9c349', width=520, height=140) {
+    const max = Math.max(...values), min = Math.min(...values);
+    const range = max - min || 1;
+    const step = width / (values.length - 1);
+    const pts = values.map((v, i) => `${i*step},${height - ((v-min)/range)*height}`).join(' ');
+    const area = `0,${height} ${pts} ${width},${height}`;
+    return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%;height:${height}px">
+      <defs><linearGradient id="lg-${color.replace('#','')}" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity=".35"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient></defs>
+      <polygon points="${area}" fill="url(#lg-${color.replace('#','')})"/>
+      <polyline fill="none" stroke="${color}" stroke-width="2" points="${pts}"/>
+    </svg>`;
+  }
+
+  function barChart(items, color='#b9c7e4', height=180) {
+    const max = Math.max(...items.map(i=>i.value)) || 1;
+    return `<div style="display:flex;gap:8px;align-items:flex-end;height:${height}px;padding:0 4px">
+      ${items.map(it => `
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="position:relative;width:100%;display:flex;align-items:flex-end;height:${height-44}px">
+            <div style="width:100%;background:linear-gradient(180deg, ${it.color||color}, ${(it.color||color)}66);height:${(it.value/max)*100}%;border-radius:6px 6px 0 0;transition:.3s"></div>
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--on-surface)">${it.value}</div>
+          <div style="font-size:10px;color:var(--outline);text-align:center">${it.label}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  function donut(values, size=160) {
+    const total = values.reduce((a,v) => a+v.value, 0);
+    let acc = 0;
+    const r = size/2 - 14;
+    const cx = size/2, cy = size/2;
+    const arcs = values.map(v => {
+      const a0 = (acc/total) * Math.PI*2 - Math.PI/2;
+      acc += v.value;
+      const a1 = (acc/total) * Math.PI*2 - Math.PI/2;
+      const x0 = cx + r*Math.cos(a0), y0 = cy + r*Math.sin(a0);
+      const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+      const large = (a1-a0) > Math.PI ? 1 : 0;
+      return `<path d="M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} Z" fill="${v.color}" opacity=".85"/>`;
+    }).join('');
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      ${arcs}
+      <circle cx="${cx}" cy="${cy}" r="${r*0.55}" fill="#111415"/>
+      <text x="${cx}" y="${cy-2}" text-anchor="middle" fill="#e9c349" font-family="Libre Caslon Text" font-size="22" font-weight="700">${total}</text>
+      <text x="${cx}" y="${cy+16}" text-anchor="middle" fill="#8f9097" font-size="10" letter-spacing="2">TOTAL</text>
+    </svg>`;
+  }
+
+  // ---------- Series ----------
+  const enrollment = [284, 296, 312, 328, 339, 351, 367, 378, 386, 392, 397, 400];
+  const monthLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  const gpaTrend = [8.32, 8.41, 8.55, 8.50, 8.62, 8.71, 8.68, 8.74, 8.79, 8.82, 8.85, +(agg.avgGpa)];
+
+  const byLoc = D.LOCATIONS.filter(l => l.id !== 'loc-vir').map(l => ({
+    label: l.city, value: D.studentsOfLocation(l.id).length, color: l.color
+  }));
+
+  const byType = [
+    { label:'Maestría', value: D.GROUPS.filter(g=>g.type==='maestria').reduce((a,g)=>a+g.size,0), color:'#e9c349' },
+    { label:'Doctorado', value: D.GROUPS.filter(g=>g.type==='doctorado').reduce((a,g)=>a+g.size,0), color:'#b9c7e4' }
+  ];
+
+  const byStatus = [
+    { label:'Destacado',    value:agg.outstanding, color:'#ffe088' },
+    { label:'Al corriente', value: D.STUDENTS.filter(s=>s.status==='al corriente').length, color:'#8bd17c' },
+    { label:'Regular',      value: D.STUDENTS.filter(s=>s.status==='regular').length,      color:'#b9c7e4' },
+    { label:'En riesgo',    value: agg.atRisk, color:'#ffb4ab' }
+  ];
+
+  // Top 5 students
+  const top5 = D.STUDENTS.slice().sort((a,b) => b.gpa - a.gpa).slice(0,5);
+
+  const html = `
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span><div class="eyebrow">Matrícula 2026</div><div class="value">${agg.total}</div><div class="hint"><span class="delta"><span class="material-symbols-outlined" style="font-size:14px">arrow_upward</span>+40% YoY</span></div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span><div class="eyebrow">Promedio académico</div><div class="value">${agg.avgGpa}</div><div class="hint"><span class="delta">+0.32 vs. 2025</span></div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">payments</span></span><div class="eyebrow">Pagos al día</div><div class="value">${agg.tuitionPct}%</div><div class="hint">${agg.tuitionOk}/${agg.total} cuentas</div></div>
+      <div class="card stat-card kpi-gold"><span class="icon-bubble"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Tasa de retención</div><div class="value">94%</div><div class="hint">Sobre ciclo previo</div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px; margin-bottom:24px">
+      <div class="card">
+        <div class="card-title"><h2>Evolución de matrícula (12 meses)</h2><span class="chip chip-gold">+116 alumnos</span></div>
+        ${lineChart(enrollment, '#e9c349')}
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--outline);margin-top:4px;letter-spacing:.1em">${monthLabels.map(m=>`<span>${m}</span>`).join('')}</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>Distribución</h2></div>
+        <div style="display:flex;justify-content:center">${donut(byType, 180)}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:14px">
+          ${byType.map(t => `<div style="display:flex;justify-content:space-between;font-size:13px"><span><span style="display:inline-block;width:10px;height:10px;background:${t.color};border-radius:2px;margin-right:8px;vertical-align:middle"></span>${t.label}</span><b>${t.value}</b></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-title"><h2>Promedio general por mes</h2><span class="chip chip-green"><span class="dot"></span>Tendencia positiva</span></div>
+        ${lineChart(gpaTrend, '#b9c7e4')}
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--outline);margin-top:4px;letter-spacing:.1em">${monthLabels.map(m=>`<span>${m}</span>`).join('')}</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>Alumnos por sede</h2><span class="material-symbols-outlined">location_on</span></div>
+        ${barChart(byLoc)}
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-title"><h2>Estado académico</h2></div>
+        <div style="display:flex;justify-content:center">${donut(byStatus, 180)}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:14px">
+          ${byStatus.map(t => `<div style="display:flex;justify-content:space-between;font-size:13px"><span><span style="display:inline-block;width:10px;height:10px;background:${t.color};border-radius:2px;margin-right:8px;vertical-align:middle"></span>${t.label}</span><b>${t.value} <span class="muted">(${Math.round(t.value*100/agg.total)}%)</span></b></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>Top 5 promedios</h2><span class="material-symbols-outlined">leaderboard</span></div>
+        <div class="feed">
+          ${top5.map((s, i) => `
+            <a href="/student.html?id=${s.id}" class="feed-item" style="text-decoration:none;color:inherit">
+              <div class="feed-icon" style="background:rgba(233,195,73,.12);color:var(--gold);font-weight:700;font-family:'Libre Caslon Text'">${i+1}</div>
+              <div class="feed-body">
+                <div class="feed-text"><b>${s.name}</b> · ${s.gpa}</div>
+                <div class="feed-time">${D.getGroup(s.groupId).program} — ${D.getLocation(s.locationId).city}</div>
+              </div>
+            </a>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:32px">
+      <button class="btn btn-ghost" onclick="RedibaiApp.toast({title:'Exportando',body:'Generando reporte ejecutivo PDF…',icon:'picture_as_pdf'})"><span class="material-symbols-outlined">picture_as_pdf</span>Exportar PDF</button>
+      <button class="btn btn-gold" onclick="RedibaiApp.toast({title:'Reporte enviado',body:'Reporte ejecutivo enviado a la Dirección Académica.',icon:'send',kind:'success'})"><span class="material-symbols-outlined">send</span>Enviar a dirección</button>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'reports', title:'Reportes e indicadores', subtitle:'Vista analítica de los 8 grupos y las 7 sedes', html });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

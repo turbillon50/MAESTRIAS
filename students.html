@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Alumnos</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const agg = D.aggregate();
+  const PAGE_SIZE = 25;
+  let currentPage = 0;
+  let filtered = D.STUDENTS.slice();
+
+  function statusClass(s) {
+    return s.status === 'destacado'    ? 'chip-gold'  :
+           s.status === 'al corriente' ? 'chip-green' :
+           s.status === 'regular'      ? 'chip-blue'  : 'chip-red';
+  }
+
+  function renderRows() {
+    const start = currentPage * PAGE_SIZE;
+    const page = filtered.slice(start, start + PAGE_SIZE);
+    const tbody = document.getElementById('stu-tbody');
+    tbody.innerHTML = page.map(s => {
+      const g = D.getGroup(s.groupId);
+      const l = D.getLocation(s.locationId);
+      return `
+        <tr onclick="location.href='/student.html?id=${s.id}'" style="cursor:pointer">
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="avatar-wrap ${s.online?'online':''}">${RedibaiApp.avatar(s.name, s.hue, 32)}</span>
+              <div><div>${s.name}</div><div class="muted" style="font-size:11px">${s.email}</div></div>
+            </div>
+          </td>
+          <td><span style="color:${g.color};font-weight:600">${g.name}</span><div class="muted" style="font-size:11px">${g.program.replace('Maestría en ','M. ').replace('Doctorado en ','D. ')}</div></td>
+          <td>${l.city}</td>
+          <td><b style="color:var(--gold)">${s.gpa}</b></td>
+          <td>${s.attendance}%</td>
+          <td>${s.credits}</td>
+          <td><span class="chip ${statusClass(s)}">${s.status}</span></td>
+          <td>${s.tuitionPaid?'<span class="chip chip-green">Al día</span>':'<span class="chip chip-red">Pendiente</span>'}</td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('pg-info').textContent =
+      `Mostrando ${start+1}–${Math.min(start+PAGE_SIZE, filtered.length)} de ${filtered.length}`;
+    document.getElementById('pg-prev').disabled = currentPage === 0;
+    document.getElementById('pg-next').disabled = start + PAGE_SIZE >= filtered.length;
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('s-search').value.trim().toLowerCase();
+    const group = document.getElementById('s-group').value;
+    const loc = document.getElementById('s-loc').value;
+    const status = document.getElementById('s-status').value;
+    const tuition = document.getElementById('s-tuition').value;
+    const onlineOnly = document.getElementById('s-online').checked;
+
+    filtered = D.STUDENTS.filter(s => {
+      if (q && !s.name.toLowerCase().includes(q) && !s.email.toLowerCase().includes(q)) return false;
+      if (group && s.groupId !== group) return false;
+      if (loc && s.locationId !== loc) return false;
+      if (status && s.status !== status) return false;
+      if (tuition === 'paid' && !s.tuitionPaid) return false;
+      if (tuition === 'due'  && s.tuitionPaid)  return false;
+      if (onlineOnly && !s.online) return false;
+      return true;
+    });
+    currentPage = 0;
+    renderRows();
+  }
+
+  const html = `
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span><div class="eyebrow">Total</div><div class="value">${agg.total}</div><div class="hint">8 grupos · 7 sedes</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">wifi</span></span><div class="eyebrow">En línea ahora</div><div class="value"><span data-online-count>${agg.online}</span></div><div class="hint">${Math.round(agg.online*100/agg.total)}% del total</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(233,195,73,.12);color:var(--gold)"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Destacados</div><div class="value">${agg.outstanding}</div><div class="hint">Promedio ≥ 8.8</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(255,180,171,.12);color:var(--error)"><span class="material-symbols-outlined">warning</span></span><div class="eyebrow">En riesgo</div><div class="value">${agg.atRisk}</div><div class="hint">Tutoría urgente</div></div>
+    </div>
+
+    <div class="filters">
+      <input class="filter-input" placeholder="Buscar por nombre o correo…" id="s-search" style="flex:1;min-width:240px"/>
+      <select class="filter-select" id="s-group">
+        <option value="">Todos los grupos</option>
+        ${D.GROUPS.map(g => `<option value="${g.id}">${g.name} — ${g.program.replace('Maestría en ','M. ').replace('Doctorado en ','D. ')}</option>`).join('')}
+      </select>
+      <select class="filter-select" id="s-loc">
+        <option value="">Todas las sedes</option>
+        ${D.LOCATIONS.map(l => `<option value="${l.id}">${l.city}</option>`).join('')}
+      </select>
+      <select class="filter-select" id="s-status">
+        <option value="">Cualquier estado</option>
+        <option value="destacado">Destacado</option>
+        <option value="al corriente">Al corriente</option>
+        <option value="regular">Regular</option>
+        <option value="en riesgo">En riesgo</option>
+      </select>
+      <select class="filter-select" id="s-tuition">
+        <option value="">Cualquier pago</option>
+        <option value="paid">Al día</option>
+        <option value="due">Pendiente</option>
+      </select>
+      <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--on-surface-2);background:rgba(255,255,255,.04);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer">
+        <input type="checkbox" id="s-online"/> Solo en línea
+      </label>
+      <button class="btn btn-gold btn-sm" onclick="RedibaiApp.toast({title:'Exportando',body:'Generando CSV con los filtros actuales.',icon:'download',kind:'success'})"><span class="material-symbols-outlined">download</span>Exportar</button>
+    </div>
+
+    <div class="card" style="padding:0">
+      <div class="table-wrap" style="border:0">
+        <table class="data">
+          <thead>
+            <tr><th>Alumno</th><th>Grupo</th><th>Sede</th><th>Promedio</th><th>Asistencia</th><th>Créditos</th><th>Estado</th><th>Colegiatura</th></tr>
+          </thead>
+          <tbody id="stu-tbody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid rgba(255,255,255,.05)">
+        <span class="muted" style="font-size:12px" id="pg-info"></span>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" id="pg-prev"><span class="material-symbols-outlined">chevron_left</span>Anterior</button>
+          <button class="btn btn-ghost btn-sm" id="pg-next">Siguiente<span class="material-symbols-outlined">chevron_right</span></button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'students', title:'Alumnos', subtitle:'Directorio completo de la comunidad académica · 400 perfiles', html });
+
+  ['s-search','s-group','s-loc','s-status','s-tuition','s-online'].forEach(id => {
+    document.getElementById(id).addEventListener('input', applyFilters);
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+  document.getElementById('pg-prev').addEventListener('click', () => { if (currentPage > 0) { currentPage--; renderRows(); } });
+  document.getElementById('pg-next').addEventListener('click', () => { if ((currentPage+1)*PAGE_SIZE < filtered.length) { currentPage++; renderRows(); } });
+
+  renderRows();
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

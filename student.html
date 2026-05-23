@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Perfil de alumno</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/data.js"></script>
+<script src="/photos.js"></script>
+<script src="/i18n.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const id = new URLSearchParams(location.search).get('id') || 'u001';
+  const s = D.getStudent(id) || D.STUDENTS[0];
+  const g = D.getGroup(s.groupId);
+  const l = D.getLocation(s.locationId);
+  const courses = D.coursesOfGroup(s.groupId);
+  const statusChip =
+    s.status === 'destacado'    ? 'chip-gold'  :
+    s.status === 'al corriente' ? 'chip-green' :
+    s.status === 'regular'      ? 'chip-blue'  : 'chip-red';
+
+  // Generate fake grade trail for each course
+  const grades = courses.map((c, ci) => {
+    const grade = +(s.gpa - 0.5 + REDIBAI.seed(s.id.charCodeAt(2)+ci*7) * 1.2).toFixed(1);
+    return { course: c, grade: Math.max(6, Math.min(10, grade)) };
+  });
+
+  const html = `
+    <a href="/students.html" class="muted" style="font-size:12px;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px">
+      <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Volver al directorio
+    </a>
+
+    <div class="card" style="background:linear-gradient(135deg, ${g.color}1a, rgba(29,32,33,.4));border-color:${g.color}33;margin-bottom:24px">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+        <span class="avatar-wrap ${s.online?'online':''}">${RedibaiApp.avatar(s.name, s.hue, 88)}</span>
+        <div style="flex:1;min-width:240px">
+          <div class="eyebrow">${g.name} · ${g.cohort}</div>
+          <h2 style="margin:6px 0;font-family:'Libre Caslon Text',serif;font-size:28px">${s.name}</h2>
+          <div class="muted" style="font-size:13px">${s.email} · <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">location_on</span>${l.city}</div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+            <span class="chip ${statusChip}">${s.status}</span>
+            ${s.online ? '<span class="chip chip-green"><span class="dot"></span>En línea ahora</span>' : `<span class="chip chip-gray">Visto ${RedibaiApp.timeAgo(Date.now()-s.lastSeenMinAgo*60000)}</span>`}
+            ${s.tuitionPaid ? '<span class="chip chip-green">Colegiatura al día</span>' : '<span class="chip chip-red">Colegiatura pendiente</span>'}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="RedibaiApp.toast({title:'Mensaje enviado',body:'Iniciaste una conversación con ${s.firstName}.',icon:'send',kind:'success'})"><span class="material-symbols-outlined">send</span>Enviar mensaje</button>
+          <button class="btn btn-ghost" onclick="RedibaiApp.toast({title:'Tutoría agendada',body:'Reunión propuesta con ${s.firstName} para mañana 17:00.',icon:'event',kind:'success'})"><span class="material-symbols-outlined">event</span>Agendar tutoría</button>
+          <button class="btn btn-gold" onclick="RedibaiApp.toast({title:'Kardex exportado',body:'Generando expediente académico en PDF.',icon:'download'})"><span class="material-symbols-outlined">download</span>Kardex</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:24px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span><div class="eyebrow">Promedio</div><div class="value">${s.gpa}</div><div class="hint">${s.gpa >= 8.5 ? 'Por encima del grupo' : 'Cerca del promedio del grupo'}</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">checklist</span></span><div class="eyebrow">Asistencia</div><div class="value">${s.attendance}%</div><div class="hint">${s.attendance >= 90 ? 'Excelente constancia' : 'Aceptable'}</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Créditos</div><div class="value">${s.credits}</div><div class="hint">${s.credits} de 200 totales</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(185,199,228,.12);color:var(--primary)"><span class="material-symbols-outlined">assignment_turned_in</span></span><div class="eyebrow">Tareas</div><div class="value">${s.assignments.graded}</div><div class="hint">${s.assignments.pending} pendientes · ${s.assignments.submitted} entregadas</div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px">
+      <div class="card">
+        <div class="card-title"><h2>Calificaciones del ciclo</h2><span class="material-symbols-outlined">grade</span></div>
+        <div class="table-wrap" style="border:0">
+          <table class="data">
+            <thead><tr><th>Materia</th><th>Código</th><th>Profesor</th><th>Calificación</th><th>Estado</th></tr></thead>
+            <tbody>
+              ${grades.map(({course, grade}) => `
+                <tr>
+                  <td>${course.name}</td>
+                  <td class="muted">${course.code}</td>
+                  <td class="muted" style="font-size:12px">${D.getTeacher(course.teacherId).name}</td>
+                  <td><b style="color:${grade>=8?'var(--gold)':grade>=7?'var(--primary)':'var(--error)'};font-size:18px">${grade.toFixed(1)}</b></td>
+                  <td>${grade>=8?'<span class="chip chip-gold">Aprobado</span>':grade>=7?'<span class="chip chip-blue">Aprobado</span>':'<span class="chip chip-red">Recuperación</span>'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><h2>Línea de tiempo</h2><span class="material-symbols-outlined">timeline</span></div>
+        <div class="feed">
+          <div class="feed-item"><div class="feed-icon" style="background:rgba(233,195,73,.1);color:var(--gold)"><span class="material-symbols-outlined">how_to_reg</span></div><div class="feed-body"><div class="feed-text">Inscripción confirmada al programa</div><div class="feed-time">${g.cohort} · ${l.city}</div></div></div>
+          <div class="feed-item"><div class="feed-icon" style="background:rgba(185,199,228,.1);color:var(--primary)"><span class="material-symbols-outlined">task_alt</span></div><div class="feed-body"><div class="feed-text">Entregó tarea: <b>Ensayo crítico</b></div><div class="feed-time">hace 2 días</div></div></div>
+          <div class="feed-item"><div class="feed-icon" style="background:rgba(233,195,73,.1);color:var(--gold)"><span class="material-symbols-outlined">grade</span></div><div class="feed-body"><div class="feed-text">Calificación publicada: <b>${grades[0].grade.toFixed(1)}</b> en ${grades[0].course.name}</div><div class="feed-time">hace 3 días</div></div></div>
+          <div class="feed-item"><div class="feed-icon" style="background:rgba(139,209,124,.1);color:var(--success)"><span class="material-symbols-outlined">videocam</span></div><div class="feed-body"><div class="feed-text">Asistió al webinar de USICAMM</div><div class="feed-time">hace 5 días</div></div></div>
+          <div class="feed-item"><div class="feed-icon" style="background:rgba(255,255,255,.04)"><span class="material-symbols-outlined">forum</span></div><div class="feed-body"><div class="feed-text">Publicó en el foro de ${grades[1].course.name}</div><div class="feed-time">hace 1 semana</div></div></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'students', title:s.name, subtitle:`${g.program} · ${l.city}`, html });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>
