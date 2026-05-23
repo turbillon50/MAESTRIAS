@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Panel de control</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/data.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const agg = D.aggregate();
+
+  const liveClass = D.EVENTS.find(e => {
+    const t = new Date(e.date).getTime();
+    return t <= Date.now() + 3600e3 && t >= Date.now() - 3600e3;
+  }) || D.EVENTS[0];
+
+  const upcoming = D.EVENTS
+    .filter(e => new Date(e.date).getTime() > Date.now())
+    .slice(0, 6);
+
+  const recentActivity = D.ACTIVITY.slice(0, 10);
+
+  const groupRows = D.GROUPS.map(g => {
+    const loc = D.getLocation(g.locationId);
+    const studs = D.studentsOfGroup(g.id);
+    const avg = (studs.reduce((a,s)=>a+s.gpa,0)/studs.length).toFixed(2);
+    const att = Math.round(studs.reduce((a,s)=>a+s.attendance,0)/studs.length);
+    const atRisk = studs.filter(s=>s.status==='en riesgo').length;
+    return `
+      <tr onclick="location.href='/group.html?id=${g.id}'" style="cursor:pointer">
+        <td><b style="color:${g.color}">${g.name}</b><div class="muted" style="font-size:11px">${g.program}</div></td>
+        <td><span class="chip ${g.type==='doctorado'?'chip-blue':'chip-gold'}"><span class="dot"></span>${g.type === 'doctorado' ? 'Doctorado' : 'Maestría'}</span></td>
+        <td>${loc.city}</td>
+        <td>${g.cohort}</td>
+        <td>${studs.length}</td>
+        <td><b>${avg}</b></td>
+        <td>${att}%</td>
+        <td>${atRisk ? `<span class="chip chip-red">${atRisk} en riesgo</span>` : `<span class="chip chip-green">OK</span>`}</td>
+      </tr>`;
+  }).join('');
+
+  const locationCards = D.LOCATIONS.filter(l=>l.id!=='loc-vir').map(l => {
+    const studs = D.studentsOfLocation(l.id);
+    return `
+      <a href="/locations.html#${l.id}" class="card" style="text-decoration:none">
+        <div class="card-title">
+          <div>
+            <div class="eyebrow">Sede</div>
+            <h3 style="color:${l.color}">${l.name}</h3>
+          </div>
+          <span class="material-symbols-outlined" style="color:${l.color}">location_on</span>
+        </div>
+        <div class="muted" style="font-size:12px;margin-bottom:8px">${l.address}</div>
+        <div style="display:flex;gap:16px">
+          <div><b style="font-size:18px">${studs.length}</b><div class="muted" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">Alumnos</div></div>
+          <div><b style="font-size:18px">${studs.filter(s=>s.online).length}</b><div class="muted" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">En línea</div></div>
+        </div>
+      </a>`;
+  }).join('');
+
+  const activityHtml = recentActivity.map(a => `
+    <div class="feed-item" data-feed-id="${a.id}">
+      <div class="feed-icon" style="background:${a.color}1a;color:${a.color}">
+        <span class="material-symbols-outlined">${a.icon}</span>
+      </div>
+      <div class="feed-body">
+        <div class="feed-text">${a.html}</div>
+        <div class="feed-time" data-time-ago="${a.atMs}">${RedibaiApp.timeAgo(a.atMs)}</div>
+      </div>
+    </div>`).join('');
+
+  const upcomingHtml = upcoming.map(e => {
+    const c = D.getCourse(e.courseId);
+    const l = D.getLocation(e.locationId);
+    return `
+      <div class="feed-item">
+        <div class="feed-icon" style="background:${e.color}1a;color:${e.color}">
+          <span class="material-symbols-outlined">${e.icon}</span>
+        </div>
+        <div class="feed-body">
+          <div class="feed-text"><b>${e.label}</b> — ${c.name}</div>
+          <div class="feed-time">${RedibaiApp.fmtDate(e.date)} · ${l.city}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const announcementsHtml = D.ANNOUNCEMENTS.slice(0, 4).map(a => `
+    <div class="feed-item">
+      <div class="feed-icon" style="background:rgba(233,195,73,.1);color:var(--gold)"><span class="material-symbols-outlined">${a.icon}</span></div>
+      <div class="feed-body">
+        <div class="feed-text"><b>${a.title}</b> <span class="chip ${a.priority==='alta'?'chip-red':a.priority==='media'?'chip-gold':'chip-gray'}">${a.priority}</span></div>
+        <div class="feed-time">${a.body}</div>
+      </div>
+    </div>`).join('');
+
+  const html = `
+    <!-- Hero strip -->
+    <section class="card" style="background:linear-gradient(135deg, rgba(10,25,47,.8), rgba(29,32,33,.4)); margin-bottom:24px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px">
+        <div>
+          <div class="eyebrow">REDIBAI Orizaba · Panel de control</div>
+          <h2 style="margin:6px 0 8px;font-family:'Libre Caslon Text',serif;font-size:28px;color:var(--gold)">Buen día, ${D.SESSION.user.name.split(' ')[1]}.</h2>
+          <div class="muted" style="font-size:13px">
+            <span data-clock></span> · <span data-online-count>${agg.online}</span> de ${agg.total} alumnos en línea ·
+            <b style="color:var(--success)">7 sedes activas</b>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="/students.html" class="btn btn-ghost"><span class="material-symbols-outlined">person_add</span>Nuevo alumno</a>
+          <a href="/groups.html" class="btn btn-ghost"><span class="material-symbols-outlined">group_add</span>Crear grupo</a>
+          <a href="/reports.html" class="btn btn-gold"><span class="material-symbols-outlined">analytics</span>Ver reportes</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI grid -->
+    <section class="grid grid-4" style="margin-bottom:24px">
+      <div class="card stat-card">
+        <span class="icon-bubble"><span class="material-symbols-outlined">groups</span></span>
+        <div class="eyebrow">Alumnos activos</div>
+        <div class="value">${agg.total}</div>
+        <div class="hint"><span class="delta"><span class="material-symbols-outlined" style="font-size:14px">arrow_upward</span>+12 vs. ciclo anterior</span></div>
+      </div>
+      <div class="card stat-card">
+        <span class="icon-bubble"><span class="material-symbols-outlined">wifi</span></span>
+        <div class="eyebrow">En línea ahora</div>
+        <div class="value"><span data-online-count>${agg.online}</span></div>
+        <div class="hint">${Math.round(agg.online*100/agg.total)}% del total</div>
+      </div>
+      <div class="card stat-card">
+        <span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span>
+        <div class="eyebrow">Promedio general</div>
+        <div class="value">${agg.avgGpa}</div>
+        <div class="hint">Asistencia ${agg.avgAttendance}%</div>
+      </div>
+      <div class="card stat-card kpi-gold">
+        <span class="icon-bubble"><span class="material-symbols-outlined">payments</span></span>
+        <div class="eyebrow">Colegiatura al corriente</div>
+        <div class="value">${agg.tuitionPct}%</div>
+        <div class="hint">${agg.tuitionOk}/${agg.total} pagos confirmados</div>
+      </div>
+    </section>
+
+    <!-- Secondary KPIs -->
+    <section class="grid grid-4" style="margin-bottom:24px">
+      <div class="card stat-card">
+        <span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">workspace_premium</span></span>
+        <div class="eyebrow">Destacados</div>
+        <div class="value">${agg.outstanding}</div>
+        <div class="hint">Promedio ≥ 8.8</div>
+      </div>
+      <div class="card stat-card">
+        <span class="icon-bubble" style="background:rgba(255,180,171,.12);color:var(--error)"><span class="material-symbols-outlined">warning</span></span>
+        <div class="eyebrow">En riesgo académico</div>
+        <div class="value">${agg.atRisk}</div>
+        <div class="hint">Requieren tutoría</div>
+      </div>
+      <div class="card stat-card">
+        <span class="icon-bubble" style="background:rgba(185,199,228,.12);color:var(--primary)"><span class="material-symbols-outlined">menu_book</span></span>
+        <div class="eyebrow">Materias activas</div>
+        <div class="value">${D.COURSES.length}</div>
+        <div class="hint">${D.TEACHERS.length} profesores adscritos</div>
+      </div>
+      <div class="card stat-card">
+        <span class="icon-bubble" style="background:rgba(233,195,73,.12);color:var(--gold)"><span class="material-symbols-outlined">videocam</span></span>
+        <div class="eyebrow">Clase en sesión</div>
+        <div class="value" style="font-size:18px;font-family:Inter">${D.getCourse(liveClass.courseId).name}</div>
+        <div class="hint"><span class="chip chip-red"><span class="dot"></span>EN VIVO</span> ${D.getLocation(liveClass.locationId).city}</div>
+      </div>
+    </section>
+
+    <!-- Two columns -->
+    <section class="grid" style="grid-template-columns: 2fr 1fr; gap:16px; margin-bottom:24px">
+      <div class="card">
+        <div class="card-title">
+          <h2>Grupos activos · ciclo 2025</h2>
+          <a href="/groups.html" class="muted" style="font-size:12px">Ver todos →</a>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr><th>Grupo</th><th>Programa</th><th>Sede</th><th>Cohorte</th><th>Alumnos</th><th>Promedio</th><th>Asistencia</th><th>Estado</th></tr>
+            </thead>
+            <tbody>${groupRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <h2>Actividad en tiempo real</h2>
+          <span class="chip chip-red"><span class="dot"></span>LIVE</span>
+        </div>
+        <div class="feed" id="live-feed">${activityHtml}</div>
+      </div>
+    </section>
+
+    <!-- Locations + Upcoming + Announcements -->
+    <section class="grid grid-3" style="margin-bottom:24px">
+      <div class="card" style="grid-column: span 1">
+        <div class="card-title"><h2>Próximos eventos</h2><span class="material-symbols-outlined">event</span></div>
+        <div class="feed">${upcomingHtml}</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>Comunicados</h2><span class="material-symbols-outlined">campaign</span></div>
+        <div class="feed">${announcementsHtml}</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>Estado del sistema</h2><span class="chip chip-green"><span class="dot"></span>OPERATIVO</span></div>
+        <ul style="list-style:none;padding:0;margin:0;font-size:13px;display:flex;flex-direction:column;gap:10px">
+          <li style="display:flex;justify-content:space-between"><span>Campus virtual</span><span class="chip chip-green">100%</span></li>
+          <li style="display:flex;justify-content:space-between"><span>Sincronización SEP</span><span class="chip chip-green">OK</span></li>
+          <li style="display:flex;justify-content:space-between"><span>Pasarela de pagos</span><span class="chip chip-green">OK</span></li>
+          <li style="display:flex;justify-content:space-between"><span>Servicio de mensajería</span><span class="chip chip-green">OK</span></li>
+          <li style="display:flex;justify-content:space-between"><span>CDN multimedia</span><span class="chip chip-gold">95%</span></li>
+          <li style="display:flex;justify-content:space-between"><span>Último respaldo</span><span class="muted">hace 12 min</span></li>
+        </ul>
+        <div class="divider"></div>
+        <div class="muted" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Sedes</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+          ${D.LOCATIONS.filter(l=>l.id!=='loc-vir').map(l => `
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${l.color};margin-right:8px"></span>${l.city}</span>
+              <span class="muted">${D.studentsOfLocation(l.id).length} alumnos</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </section>
+
+    <!-- Sedes grid -->
+    <section>
+      <h2 style="font-family:'Libre Caslon Text',serif;font-size:22px;margin:0 0 14px">Red de sedes</h2>
+      <div class="grid grid-3">${locationCards}</div>
+    </section>
+  `;
+
+  RedibaiApp.mount({ active: 'admin', title: 'Panel de control', subtitle: 'Vista ejecutiva de toda la academia', html });
+
+  // Live feed: prepend new activity events
+  document.addEventListener('DOMContentLoaded', () => {});
+})();
+</script>
+<script src="/realtime.js"></script>
+<script>
+  RedibaiRealtime && RedibaiRealtime.on('activity', (evt) => {
+    const feed = document.getElementById('live-feed');
+    if (!feed) return;
+    const div = document.createElement('div');
+    div.className = 'feed-item is-new';
+    div.innerHTML = `
+      <div class="feed-icon" style="background:${evt.color}1a;color:${evt.color}">
+        <span class="material-symbols-outlined">${evt.icon}</span>
+      </div>
+      <div class="feed-body">
+        <div class="feed-text">${evt.html}</div>
+        <div class="feed-time" data-time-ago="${evt.atMs}">hace 0s</div>
+      </div>`;
+    feed.insertBefore(div, feed.firstChild);
+    while (feed.children.length > 12) feed.removeChild(feed.lastChild);
+  });
+</script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>

@@ -39,17 +39,31 @@
   ],
   "shortcuts": [
     {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "Abrir tu panel académico",
-      "url": "/dashboard.html?source=shortcut",
+      "name": "Panel de control",
+      "short_name": "Panel",
+      "description": "Dashboard ejecutivo en tiempo real",
+      "url": "/admin.html?source=shortcut",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Iniciar sesión",
-      "short_name": "Login",
-      "description": "Acceder al campus",
-      "url": "/login.html?source=shortcut",
+      "name": "Alumnos",
+      "short_name": "Alumnos",
+      "description": "Directorio de los 400 alumnos",
+      "url": "/students.html?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Grupos",
+      "short_name": "Grupos",
+      "description": "Maestrías y doctorados",
+      "url": "/groups.html?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mi dashboard",
+      "short_name": "Dashboard",
+      "description": "Vista personal del alumno",
+      "url": "/dashboard.html?source=shortcut",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]

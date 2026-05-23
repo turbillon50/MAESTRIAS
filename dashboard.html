@@ -3,322 +3,140 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>REDIBAI — Dashboard Académico</title>
-<meta name="description" content="Tu panel académico personalizado en REDIBAI Orizaba." />
+<title>REDIBAI — Mi dashboard</title>
 <meta name="theme-color" content="#111415" />
-<meta name="color-scheme" content="dark" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="REDIBAI" />
-<meta name="mobile-web-app-capable" content="yes" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link rel="stylesheet" href="/app.css" />
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-<script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        colors: {
-          "secondary-fixed": "#ffe088", "outline": "#8f9097", "surface-container": "#1d2021",
-          "outline-variant": "#44474d", "background": "#111415",
-          "surface-container-lowest": "#0c0f10", "secondary-fixed-dim": "#e9c349",
-          "surface-container-low": "#191c1d", "on-surface": "#e1e3e4",
-          "primary-container": "#0a192f", "on-primary": "#233148",
-          "on-surface-variant": "#c5c6cd", "primary-fixed-dim": "#b9c7e4",
-          "surface-container-high": "#282a2b", "surface-container-highest": "#323536",
-          "primary": "#b9c7e4", "secondary": "#e9c349", "on-secondary": "#3c2f00",
-          "error": "#ffb4ab", "surface": "#111415"
-        },
-        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
-        spacing: {
-          base: "8px", gutter: "24px", "container-padding-mobile": "20px",
-          "section-gap": "80px", "container-padding-desktop": "40px", "card-gap": "24px"
-        },
-        fontFamily: {
-          "label-caps": ["Inter"], "headline-md": ["Libre Caslon Text"],
-          "headline-sm": ["Libre Caslon Text"], "display-lg": ["Libre Caslon Text"],
-          "body-md": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"]
-        },
-        fontSize: {
-          "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
-          "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
-          "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
-          "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
-          "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
-          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
-          "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }]
-        }
-      }
-    }
-  };
-</script>
-<style>
-  body { background-color: #111415; color: #e1e3e4; -webkit-font-smoothing: antialiased; min-height: max(884px, 100dvh); }
-  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  .glass-card {
-    background: rgba(29, 32, 33, 0.4);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  .gold-glow { filter: drop-shadow(0 4px 15px rgba(212, 175, 55, 0.1)); }
-  .progress-gradient { background: linear-gradient(90deg, #e9c349 0%, #b9c7e4 100%); }
-  #pwa-install-btn {
-    position: fixed; bottom: 96px; right: 16px; z-index: 60;
-    background: rgba(29,32,33,.85); backdrop-filter: blur(20px);
-    border: 1px solid rgba(233,195,73,.35); color: #ffe088;
-    border-radius: 9999px; padding: 10px 18px;
-    font-family: Inter, sans-serif; font-size: 12px; font-weight: 600;
-    letter-spacing: .12em; text-transform: uppercase;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  }
-  #pwa-install-btn[hidden] { display: none; }
-  @media (min-width: 768px) { #pwa-install-btn { bottom: 24px; right: 24px; } }
-  .hero-card {
-    background:
-      radial-gradient(ellipse at 30% 30%, rgba(233,195,73,.18), transparent 55%),
-      radial-gradient(ellipse at 80% 80%, rgba(185,199,228,.10), transparent 60%),
-      linear-gradient(135deg, #0a192f 0%, #111415 100%);
-  }
-  [data-state="offline"] { color: #ffb4ab; }
-</style>
 </head>
-<body class="font-body-md overflow-x-hidden">
-<header class="bg-surface/70 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-container-padding-mobile h-16 w-full fixed top-0 z-50">
-  <a href="/" class="flex items-center gap-4">
-    <div class="w-10 h-10 rounded-full bg-secondary-container/20 overflow-hidden border border-secondary/30 flex items-center justify-center">
-      <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">person</span>
-    </div>
-    <span class="font-headline-sm text-headline-sm font-bold tracking-widest text-secondary">REDIBAI</span>
-  </a>
-  <div class="flex items-center gap-3">
-    <span id="pwa-status" data-state="online" class="hidden md:inline font-label-caps text-[10px] text-outline tracking-widest"></span>
-    <button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-200">
-      <span class="material-symbols-outlined">notifications</span>
-    </button>
-  </div>
-</header>
-
-<main class="pt-24 pb-32 px-container-padding-mobile md:px-container-padding-desktop max-w-7xl mx-auto space-y-8">
-  <section>
-    <h1 class="font-headline-md text-headline-md text-secondary">Hola, <span id="greeting-name">Ana</span>.</h1>
-    <p class="font-body-lg text-body-lg text-on-surface-variant">Buen día para aprender.</p>
-  </section>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-card-gap">
-    <div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40 hover:border-secondary/30 transition-all duration-300">
-      <div class="flex justify-between items-start">
-        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Promedio General</span>
-        <span class="material-symbols-outlined text-secondary">auto_graph</span>
-      </div>
-      <div class="flex items-baseline gap-2">
-        <span class="font-display-lg text-display-lg text-on-surface font-bold">8.7</span>
-        <span class="text-secondary text-sm flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">arrow_upward</span> 0.2
-        </span>
-      </div>
-    </div>
-
-    <div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40 hover:border-secondary/30 transition-all duration-300">
-      <div class="flex justify-between items-start">
-        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Tareas Pendientes</span>
-        <span class="material-symbols-outlined text-primary">task</span>
-      </div>
-      <div class="flex items-baseline gap-2">
-        <span class="font-display-lg text-display-lg text-on-surface font-bold">3</span>
-        <span class="font-body-sm text-on-surface-variant">Para esta semana</span>
-      </div>
-    </div>
-
-    <div class="glass-card p-6 rounded-xl flex flex-col justify-between h-40">
-      <div class="flex justify-between items-start">
-        <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Créditos Totales</span>
-        <span class="material-symbols-outlined text-secondary-fixed">workspace_premium</span>
-      </div>
-      <div>
-        <span class="font-headline-sm text-headline-sm text-on-surface font-semibold">142 / 200</span>
-        <div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
-          <div class="h-full bg-secondary w-[71%]"></div>
-        </div>
-      </div>
-    </div>
-
-    <a href="#" class="bg-secondary p-6 rounded-xl flex flex-col justify-between h-40 gold-glow cursor-pointer hover:scale-[1.02] active:scale-95 transition-all">
-      <div class="flex justify-between items-start">
-        <span class="font-label-caps text-label-caps text-on-secondary uppercase font-bold">Inscripción USICAMM</span>
-        <span class="material-symbols-outlined text-on-secondary">verified</span>
-      </div>
-      <div class="flex items-center gap-2 group">
-        <span class="font-body-md text-on-secondary font-semibold">Iniciar trámite</span>
-        <span class="material-symbols-outlined text-on-secondary group-hover:translate-x-1 transition-transform">arrow_forward</span>
-      </div>
-    </a>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-card-gap">
-    <div class="lg:col-span-2 space-y-6">
-      <div class="relative overflow-hidden rounded-xl border border-outline-variant/30 h-80 group hero-card">
-        <div class="absolute bottom-0 left-0 p-8 w-full flex flex-col justify-end gap-4">
-          <span class="font-label-caps text-label-caps text-secondary uppercase bg-secondary/10 px-3 py-1 rounded-full self-start">En curso ahora</span>
-          <h2 class="font-headline-md text-headline-md text-on-surface">Metodología de la Investigación</h2>
-          <div class="flex flex-wrap items-center gap-4 text-on-surface-variant font-body-sm">
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Dr. Luis Mendoza</span>
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 10:30 AM - 12:00 PM</span>
-          </div>
-          <div class="space-y-2 mt-4">
-            <div class="flex justify-between items-center text-sm font-label-caps text-on-surface-variant">
-              <span>Progreso del módulo</span>
-              <span>75%</span>
-            </div>
-            <div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
-              <div class="h-full progress-gradient w-3/4 shadow-[0_0_15px_rgba(233,195,73,0.3)]"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="glass-card rounded-xl p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h3 class="font-headline-sm text-headline-sm text-on-surface">Actividad reciente</h3>
-          <button class="text-secondary font-label-caps text-label-caps hover:underline">Ver todo</button>
-        </div>
-        <div class="space-y-6">
-          <div class="flex gap-4">
-            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <span class="material-symbols-outlined">description</span>
-            </div>
-            <div class="flex-1">
-              <p class="font-body-md text-on-surface">Tarea calificada: <span class="font-semibold text-secondary">Ensayo de Ética</span></p>
-              <p class="font-body-sm text-on-surface-variant">Calificación: 9.5 · Hace 2 horas</p>
-            </div>
-          </div>
-          <div class="flex gap-4 border-t border-outline-variant/10 pt-4">
-            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
-              <span class="material-symbols-outlined">forum</span>
-            </div>
-            <div class="flex-1">
-              <p class="font-body-md text-on-surface">Nuevo mensaje en <span class="font-semibold text-primary">Comunidad REDIBAI</span></p>
-              <p class="font-body-sm text-on-surface-variant">María López: "¿Alguien tiene el PDF de..." · Hace 4 horas</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="space-y-6">
-      <div class="glass-card rounded-xl overflow-hidden">
-        <div class="h-32 bg-surface-container-high relative hero-card">
-          <div class="absolute top-4 left-4">
-            <span class="bg-error/20 text-error px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span> En Vivo
-            </span>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <h4 class="font-headline-sm text-[20px] leading-tight text-on-surface">Webinar: Estrategias de USICAMM 2025</h4>
-          <p class="font-body-sm text-on-surface-variant">Descubre las claves para el proceso de admisión docente con expertos invitados.</p>
-          <button class="w-full py-3 bg-primary-container text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all duration-300 flex justify-center items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">videocam</span>
-            Unirse ahora
-          </button>
-        </div>
-      </div>
-
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-6">Próximas Entregas</h3>
-        <div class="space-y-5">
-          <div class="flex gap-4 items-start group">
-            <div class="bg-surface-container-high p-3 rounded-lg flex flex-col items-center min-w-[50px]">
-              <span class="text-[10px] font-bold text-on-surface-variant">MAY</span>
-              <span class="text-xl font-bold text-secondary">15</span>
-            </div>
-            <div>
-              <h5 class="font-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors cursor-pointer">Mapa Conceptual</h5>
-              <p class="font-body-sm text-on-surface-variant">Teorías del Aprendizaje</p>
-            </div>
-          </div>
-          <div class="flex gap-4 items-start group">
-            <div class="bg-surface-container-high p-3 rounded-lg flex flex-col items-center min-w-[50px]">
-              <span class="text-[10px] font-bold text-on-surface-variant">MAY</span>
-              <span class="text-xl font-bold text-on-surface-variant">20</span>
-            </div>
-            <div>
-              <h5 class="font-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors cursor-pointer">Reporte de Lectura</h5>
-              <p class="font-body-sm text-on-surface-variant">Investigación Educativa</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-
-<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-2xl border-t border-outline-variant/10 shadow-lg flex justify-around items-center pt-3 pb-safe px-4 h-20 md:hidden">
-  <a class="flex flex-col items-center justify-center text-secondary font-bold" href="/dashboard.html">
-    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-    <span class="font-label-caps text-[10px] mt-1">Inicio</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-outline" href="/welcome.html">
-    <span class="material-symbols-outlined">school</span>
-    <span class="font-label-caps text-[10px] mt-1">Académico</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-outline" href="#">
-    <span class="material-symbols-outlined">group</span>
-    <span class="font-label-caps text-[10px] mt-1">Comunidad</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-outline" href="#">
-    <span class="material-symbols-outlined">chat_bubble</span>
-    <span class="font-label-caps text-[10px] mt-1">Mensajes</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-outline" href="/login.html" id="logout-link">
-    <span class="material-symbols-outlined">logout</span>
-    <span class="font-label-caps text-[10px] mt-1">Salir</span>
-  </a>
-</nav>
-
-<div class="fixed bottom-8 right-8 hidden md:block z-50">
-  <button class="bg-secondary text-on-secondary font-bold px-6 py-4 rounded-full shadow-2xl gold-glow flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
-    <span class="material-symbols-outlined">add</span>
-    Nueva Consulta
-  </button>
-</div>
-
-<button id="pwa-install-btn" hidden type="button" aria-label="Instalar la aplicación REDIBAI">
-  <span class="material-symbols-outlined" style="font-size:18px;">download</span>
-  Instalar app
-</button>
-
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/app.js"></script>
 <script>
-  try {
-    const stored = localStorage.getItem('redibai:user');
-    if (stored) {
-      const name = stored.split('@')[0].split('.')[0];
-      const pretty = name.charAt(0).toUpperCase() + name.slice(1);
-      document.getElementById('greeting-name').textContent = pretty;
-    }
-  } catch (_) {}
+(function () {
+  const D = REDIBAI;
+  const session = RedibaiApp.getSession();
+  const isAdmin = session.role === 'admin';
 
-  document.getElementById('logout-link').addEventListener('click', () => {
-    try { localStorage.removeItem('redibai:user'); } catch (_) {}
-  });
+  // For the demo, show the "Mi dashboard" as if signed in as a student of Grupo 6
+  const me = D.STUDENTS[0]; // u001
+  const g = D.getGroup(me.groupId);
+  const l = D.getLocation(me.locationId);
+  const courses = D.coursesOfGroup(me.groupId);
+  const liveCourse = courses[0];
+  const teacher = D.getTeacher(liveCourse.teacherId);
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach((card, index) => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(10px)';
-      setTimeout(() => {
-        card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-        card.style.opacity = '1';
-        card.style.transform = 'translateY(0)';
-      }, 80 * index);
-    });
-  });
+  const upcoming = D.EVENTS.filter(e => e.groupId === me.groupId && new Date(e.date).getTime() > Date.now()).slice(0,5);
+
+  const activityHtml = D.ACTIVITY.slice(0,8).map(a => `
+    <div class="feed-item">
+      <div class="feed-icon" style="background:${a.color}1a;color:${a.color}"><span class="material-symbols-outlined">${a.icon}</span></div>
+      <div class="feed-body"><div class="feed-text">${a.html}</div><div class="feed-time" data-time-ago="${a.atMs}">${RedibaiApp.timeAgo(a.atMs)}</div></div>
+    </div>`).join('');
+
+  const upcomingHtml = upcoming.map(e => `
+    <div class="feed-item">
+      <div class="feed-icon" style="background:${e.color}1a;color:${e.color}"><span class="material-symbols-outlined">${e.icon}</span></div>
+      <div class="feed-body">
+        <div class="feed-text"><b>${e.label}</b> — ${D.getCourse(e.courseId).name}</div>
+        <div class="feed-time">${RedibaiApp.fmtDate(e.date)}</div>
+      </div>
+    </div>`).join('');
+
+  const html = `
+    ${isAdmin ? `<div class="card" style="margin-bottom:16px;border-color:rgba(233,195,73,.25);background:linear-gradient(90deg, rgba(233,195,73,.06), transparent)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><span class="chip chip-gold">VISTA ADMIN</span> Estás viendo el dashboard del alumno. Cambia al panel de control para gestionar la academia.</div>
+        <a href="/admin.html" class="btn btn-gold btn-sm"><span class="material-symbols-outlined">space_dashboard</span>Ir al panel</a>
+      </div>
+    </div>` : ''}
+
+    <section style="margin-bottom:20px">
+      <h2 style="font-family:'Libre Caslon Text',serif;font-size:28px;margin:0;color:var(--gold)">Hola, ${me.firstName}.</h2>
+      <p class="muted" style="margin:4px 0 0">${g.program} · ${g.name} · ${l.city}</p>
+    </section>
+
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">auto_graph</span></span><div class="eyebrow">Promedio general</div><div class="value">${me.gpa}</div><div class="hint delta"><span class="material-symbols-outlined" style="font-size:14px">arrow_upward</span>+0.2 este mes</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">task</span></span><div class="eyebrow">Tareas pendientes</div><div class="value">${me.assignments.pending}</div><div class="hint">Para esta semana</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">workspace_premium</span></span><div class="eyebrow">Créditos</div><div class="value">${me.credits}/200</div><div class="hint"><div class="progress" style="margin-top:6px"><i style="width:${me.credits/2}%"></i></div></div></div>
+      <a href="#" class="card stat-card kpi-gold" onclick="RedibaiApp.toast({title:'Trámite iniciado',body:'Abriendo formulario USICAMM 2026.',icon:'verified'})"><span class="icon-bubble"><span class="material-symbols-outlined">verified</span></span><div class="eyebrow">Trámite USICAMM</div><div class="value" style="font-size:20px;font-family:Inter">Iniciar ahora</div><div class="hint">Cierre 31 de mayo</div></a>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px; margin-bottom:24px">
+      <div>
+        <!-- Live class hero -->
+        <div class="card" style="background:linear-gradient(135deg, rgba(10,25,47,.6), rgba(29,32,33,.4));margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+            <div>
+              <span class="chip chip-red"><span class="dot"></span>EN VIVO AHORA</span>
+              <h2 style="margin:10px 0 4px;font-family:'Libre Caslon Text',serif;font-size:24px">${liveCourse.name}</h2>
+              <div class="muted" style="font-size:13px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">person</span> ${teacher.name} · <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">schedule</span> ${liveCourse.schedule}</div>
+            </div>
+            <button class="btn btn-gold" onclick="RedibaiApp.toast({title:'Conectando…',body:'Entrando al aula virtual de ${liveCourse.name}',icon:'videocam'})"><span class="material-symbols-outlined">videocam</span>Entrar al aula</button>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--outline);margin-bottom:4px">
+            <span>Progreso del módulo</span><span style="color:var(--gold)">${liveCourse.progress}%</span>
+          </div>
+          <div class="progress"><i style="width:${liveCourse.progress}%"></i></div>
+        </div>
+
+        <!-- My courses -->
+        <div class="card">
+          <div class="card-title"><h2>Mis materias</h2><a href="/courses.html" class="muted" style="font-size:12px">Ver todas →</a></div>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+            ${courses.map(c => `
+              <div style="background:rgba(255,255,255,.03);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.04)">
+                <div class="eyebrow">${c.code}</div>
+                <div style="font-weight:600;margin:6px 0">${c.name}</div>
+                <div class="progress" style="margin:8px 0"><i style="width:${c.progress}%"></i></div>
+                <div class="muted" style="font-size:12px">${c.progress}% completado · <b style="color:var(--gold)">${c.avgGrade}</b></div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title"><h2>Próximas entregas</h2><span class="material-symbols-outlined">event_upcoming</span></div>
+          <div class="feed">${upcomingHtml || '<div class="muted">Sin entregas próximas</div>'}</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><h2>Actividad reciente</h2><span class="chip chip-red"><span class="dot"></span>LIVE</span></div>
+          <div class="feed">${activityHtml}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <a href="/messages.html" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Mensajes</h3><span class="material-symbols-outlined">forum</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${D.MESSAGES.filter(m=>m.unread).length}</div>
+        <div class="muted" style="font-size:13px">conversaciones sin leer</div>
+      </a>
+      <a href="/calendar.html" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Calendario</h3><span class="material-symbols-outlined">calendar_month</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${D.EVENTS.filter(e => new Date(e.date) > Date.now()).length}</div>
+        <div class="muted" style="font-size:13px">eventos próximos</div>
+      </a>
+      <a href="/group.html?id=${me.groupId}" class="card" style="text-decoration:none">
+        <div class="card-title"><h3>Mi grupo</h3><span class="material-symbols-outlined">groups</span></div>
+        <div style="font-size:28px;font-family:'Libre Caslon Text',serif;color:var(--gold)">${g.size}</div>
+        <div class="muted" style="font-size:13px">compañeros en ${g.name}</div>
+      </a>
+    </div>
+  `;
+
+  RedibaiApp.mount({ active:'dashboard', title:'Mi dashboard', subtitle:`${g.name} · ${l.city}`, html });
+})();
 </script>
+<script src="/realtime.js"></script>
 <script src="/pwa.js" defer></script>
 </body>
 </html>

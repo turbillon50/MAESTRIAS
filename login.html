@@ -84,6 +84,8 @@
     line-height: 1.4;
     margin-bottom: 24px;
   }
+  .demo-pill { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:#ffe088; padding:4px 10px; border-radius:9999px; font-size:11px; cursor:pointer; }
+  .demo-pill:hover { background:rgba(233,195,73,.18); border-color:#e9c349; }
 </style>
 </head>
 <body class="text-on-surface selection:bg-secondary-fixed/30 flex flex-col items-center justify-center overflow-x-hidden relative">
@@ -108,7 +110,12 @@
     </div>
 
     <div class="demo-banner">
-      <strong>Demo:</strong> usa cualquier correo y contraseña para entrar al dashboard.
+      <strong>Demo navegable:</strong> elige un perfil abajo o usa cualquier correo + contraseña.
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+        <button type="button" class="demo-pill" data-as="admin">Director académico</button>
+        <button type="button" class="demo-pill" data-as="docente">Profesor</button>
+        <button type="button" class="demo-pill" data-as="alumno">Alumno</button>
+      </div>
     </div>
 
     <form id="login-form" class="space-y-6" novalidate>
@@ -180,14 +187,43 @@
 </button>
 
 <script>
+  const ROLE_PROFILES = {
+    admin:   { role:'admin',   user:{ id:'u-admin', name:'Mtra. Sofía Hernández Ruiz',  email:'admin@redibai.edu.mx',   role:'Director Académico', locationId:'loc-ori' }, dest:'/admin.html' },
+    docente: { role:'docente', user:{ id:'t01',     name:'Dr. Luis García Mendoza',     email:'luis.garcia@redibai.edu.mx', role:'Profesor titular',   locationId:'loc-ori' }, dest:'/admin.html' },
+    alumno:  { role:'alumno',  user:{ id:'u001',    name:'Ana Martínez López',          email:'ana.martinez@redibai.edu.mx', role:'Alumna · Grupo 6',  locationId:'loc-ori' }, dest:'/dashboard.html' }
+  };
+
+  function signIn(role) {
+    const profile = ROLE_PROFILES[role];
+    try {
+      localStorage.setItem('redibai:session', JSON.stringify({ role: profile.role, user: profile.user }));
+      localStorage.setItem('redibai:user', profile.user.email);
+    } catch (_) {}
+    location.href = profile.dest;
+  }
+
+  document.querySelectorAll('.demo-pill').forEach(btn => {
+    btn.addEventListener('click', () => signIn(btn.dataset.as));
+  });
+
   const form = document.getElementById('login-form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
     const pw = document.getElementById('password').value;
     if (!email || !pw) return;
-    try { localStorage.setItem('redibai:user', email); } catch (_) {}
-    location.href = '/dashboard.html';
+    // Heuristic: if email contains "admin", use admin role; "prof"/"docente" -> docente; else alumno.
+    const role = /admin/i.test(email) ? 'admin'
+               : /(prof|docente|maestr)/i.test(email) ? 'docente'
+               : 'alumno';
+    const profile = JSON.parse(JSON.stringify(ROLE_PROFILES[role]));
+    profile.user.email = email;
+    profile.user.name = email.split('@')[0].split('.').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    try {
+      localStorage.setItem('redibai:session', JSON.stringify({ role: profile.role, user: profile.user }));
+      localStorage.setItem('redibai:user', email);
+    } catch (_) {}
+    location.href = profile.dest;
   });
 
   const toggle = document.getElementById('toggle-pw');

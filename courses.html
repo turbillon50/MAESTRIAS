@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>REDIBAI — Materias</title>
+<meta name="theme-color" content="#111415" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="/app.css" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="app"></div>
+<script src="/data.js"></script>
+<script src="/app.js"></script>
+<script>
+(function () {
+  const D = REDIBAI;
+  const cards = D.COURSES.map(c => {
+    const g = D.getGroup(c.groupId);
+    const t = D.getTeacher(c.teacherId);
+    const loc = D.getLocation(g.locationId);
+    return `
+      <div class="card" id="${c.id}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div class="eyebrow">${c.code}</div>
+            <h3 style="margin:6px 0;font-family:'Libre Caslon Text',serif">${c.name}</h3>
+            <div class="muted" style="font-size:12px">${g.program} · ${g.name}</div>
+          </div>
+          <span class="chip ${g.type==='doctorado'?'chip-blue':'chip-gold'}">${g.type==='doctorado'?'Doctorado':'Maestría'}</span>
+        </div>
+
+        <div class="muted" style="font-size:12px;margin-bottom:6px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">person</span> ${t.name}</div>
+        <div class="muted" style="font-size:12px;margin-bottom:6px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">schedule</span> ${c.schedule}</div>
+        <div class="muted" style="font-size:12px;margin-bottom:12px"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">location_on</span> ${loc.city}</div>
+
+        <div style="display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--outline);margin-bottom:4px">
+          <span>Avance</span><span style="color:var(--gold)">${c.progress}%</span>
+        </div>
+        <div class="progress"><i style="width:${c.progress}%"></i></div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:12px">
+          <span><b>${c.enrolled}</b> <span class="muted">alumnos</span></span>
+          <span><b style="color:var(--gold)">${c.avgGrade}</b> <span class="muted">promedio</span></span>
+          <span class="chip ${c.assignmentsPending?'chip-red':'chip-green'}">${c.assignmentsPending} pend.</span>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;gap:8px">
+          <a href="/group.html?id=${g.id}" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center"><span class="material-symbols-outlined">groups</span>Ver grupo</a>
+          <button class="btn btn-gold btn-sm" style="flex:1;justify-content:center" onclick="RedibaiApp.toast({title:'Aula virtual abierta',body:'Conectando a la sesión de ${c.name}.',icon:'videocam'})"><span class="material-symbols-outlined">videocam</span>Aula virtual</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  const html = `
+    <div class="grid grid-4" style="margin-bottom:20px">
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">menu_book</span></span><div class="eyebrow">Materias activas</div><div class="value">${D.COURSES.length}</div><div class="hint">3 por grupo</div></div>
+      <div class="card stat-card"><span class="icon-bubble"><span class="material-symbols-outlined">person</span></span><div class="eyebrow">Profesorado</div><div class="value">${D.TEACHERS.length}</div><div class="hint">Adscritos</div></div>
+      <div class="card stat-card"><span class="icon-bubble" style="background:rgba(139,209,124,.12);color:var(--success)"><span class="material-symbols-outlined">trending_up</span></span><div class="eyebrow">Avance medio</div><div class="value">${Math.round(D.COURSES.reduce((a,c)=>a+c.progress,0)/D.COURSES.length)}%</div><div class="hint">Del ciclo</div></div>
+      <div class="card stat-card kpi-gold"><span class="icon-bubble"><span class="material-symbols-outlined">assignment</span></span><div class="eyebrow">Tareas pendientes</div><div class="value">${D.COURSES.reduce((a,c)=>a+c.assignmentsPending,0)}</div><div class="hint">A revisar esta semana</div></div>
+    </div>
+
+    <div class="filters">
+      <input class="filter-input" placeholder="Buscar materia, código o profesor…" id="c-search" style="flex:1;min-width:240px"/>
+      <select class="filter-select" id="c-group">
+        <option value="">Todos los grupos</option>
+        ${D.GROUPS.map(g => `<option value="${g.id}">${g.name}</option>`).join('')}
+      </select>
+      <select class="filter-select" id="c-type">
+        <option value="">Maestría y doctorado</option>
+        <option value="maestria">Solo maestría</option>
+        <option value="doctorado">Solo doctorado</option>
+      </select>
+    </div>
+
+    <div class="grid grid-3" id="courses-grid">${cards}</div>
+  `;
+
+  RedibaiApp.mount({ active:'courses', title:'Materias', subtitle:`${D.COURSES.length} materias activas en 8 grupos`, html });
+
+  function applyFilters() {
+    const q = document.getElementById('c-search').value.trim().toLowerCase();
+    const gid = document.getElementById('c-group').value;
+    const type = document.getElementById('c-type').value;
+    document.querySelectorAll('#courses-grid > .card').forEach((card, idx) => {
+      const c = D.COURSES[idx];
+      const g = D.getGroup(c.groupId);
+      const t = D.getTeacher(c.teacherId);
+      const match = (!q || (c.name+' '+c.code+' '+t.name).toLowerCase().includes(q))
+        && (!gid || c.groupId === gid)
+        && (!type || g.type === type);
+      card.style.display = match ? '' : 'none';
+    });
+  }
+  ['c-search','c-group','c-type'].forEach(id => {
+    document.getElementById(id).addEventListener('input', applyFilters);
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+})();
+</script>
+<script src="/realtime.js"></script>
+<script src="/pwa.js" defer></script>
+</body>
+</html>
